@@ -34,10 +34,18 @@ class Snapshot:
 
 
 @dataclass
+class ScanConfig:
+    """Extra inputs for Ripple's dynamic-reference scan (``[scan]`` in ripple.toml, optional)."""
+    config_files: list[str] = field(default_factory=list)   # registries / step lists naming functions
+    extra_dirs: list[str] = field(default_factory=list)     # directories scanned in addition to the entry files'
+
+
+@dataclass
 class Config:
     repo_root: Path
     mappings: list[Mapping] = field(default_factory=list)
     snapshot: Snapshot | None = None
+    scan: ScanConfig = field(default_factory=ScanConfig)
 
 
 def load_config(repo_root: str | Path, path: str = "ripple.toml") -> Config:
@@ -46,4 +54,5 @@ def load_config(repo_root: str | Path, path: str = "ripple.toml") -> Config:
         raw = tomllib.load(fh)
     mappings = [Mapping(**m) for m in raw.get("mapping", [])]
     snap = Snapshot(**raw["snapshot"]) if "snapshot" in raw else None
-    return Config(repo_root=root, mappings=mappings, snapshot=snap)
+    scan = ScanConfig(**raw.get("scan", {}))
+    return Config(repo_root=root, mappings=mappings, snapshot=snap, scan=scan)

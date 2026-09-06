@@ -22,7 +22,7 @@ git base..head
    v
 [1] entire graph diff       -> changed symbols (e.g. normalize_amount)
 [2] entire graph impact     -> callers / data flows -> pipeline entry points
-[3] ripple.yaml mapping     -> entry point -> Databricks job + output tables (CONFIGURED, explicit)
+[3] ripple.toml mapping     -> entry point -> Databricks job + output tables (CONFIGURED, explicit)
 [4] intent lookup           -> Entire checkpoints / intent notes for the affected pipeline
 [5] execute both versions   -> same input snapshot (Delta table on Databricks)
 [6] compare on Databricks   -> row-level diff + aggregate diff via SQL warehouse
@@ -32,7 +32,7 @@ git base..head
 MVP scope (deliberately small): one Python pipeline (`pipeline/transactions.py`), three Delta tables (`raw_transactions`, `clean_transactions`, `daily_revenue`), one aggregate (daily net revenue), one seeded regression (`abs(amount)` introduced while "normalizing transaction amounts").
 
 Explicit design choices:
-- Source-to-job mapping is **configured** in `ripple.yaml` and labelled as such; automatic discovery is out of scope.
+- Source-to-job mapping is **configured** in `ripple.toml` and labelled as such; automatic discovery is out of scope for the MVP (Unity Catalog lineage was added afterwards as a separately labelled, observed source; see "After the Curveball").
 - Graph-derived relationships are labelled separately from configured mappings.
 - Databricks is used for the input snapshot (Delta), for storing both outputs, and for computing the row-level and aggregate comparison via SQL. A local execution fallback with cached evidence exists for demo resilience.
 
@@ -68,6 +68,18 @@ Response (fresh session B, reconstructed from checkpoint `01M1TY0G8KHGFN783A6VVB
 - `demo/dynamic-dispatch..demo/dynamic-dispatch-safe` (behaviour-preserving refactor): same partial banner, fallback execution, 0 rows changed, verdict "PASS ... (verified by execution; graph analysis partial, see banner)". Card: `evidence/review_card_dynamic_safe.md`.
 - `main..demo/abs-normalize` (static calls): 4 `confirmed` edges, no banner, BLOCK as before.
 
+## After the Curveball: the remaining items (checkpoint 5)
+The "next steps" recorded at checkpoint 4 were all implemented in a follow-up session, plus a repository repair:
+
+1. **Repository repair.** PRs #2, #3 and #4 merged the three `demo/*` branches into `main` on GitHub. That put a conflict-mangled, syntactically invalid `pipeline/transactions.py` on `main` (an unterminated docstring after the merged `abs()` and dynamic-dispatch variants), and it erased the demo baseline (`main..demo/abs-normalize` would be empty). `main`'s pipeline file is restored to the static, intent-respecting version; the demo branches stay separate and keep diffing against `main`.
+2. **Automatic worktree at `head`** (`ripple/worktree.py`). `entire graph` indexes the working tree, so impact and the dynamic-reference scan used to describe whatever was checked out. `ripple review` now materialises `--head` in a temporary detached worktree (unless the checkout already is head or `--no-worktree` is given), points the graph and the scans at it, and removes it afterwards. The card says which tree was analysed. The dynamic-dispatch demo therefore runs from the main checkout without any manual `git worktree add`.
+3. **Cross-file dynamic-reference scan** (`ripple/graph.py: scan_set`, `scan_cross_file_references`). The scan set is the changed Python files, the configured entry files, every Python and config file (`.yaml/.yml/.toml/.json/.ini/.cfg`) in their directories, plus `[scan] config_files` / `extra_dirs` from `ripple.toml`. A changed symbol whose name appears as data in file A (a string constant in Python, a bare token in a config file, comments excluded) while a *different* Python file B in the set dispatches by reflection is reported as `needs-verification` with both locations ("cross-file: name appears as data here; `runner.py:7` dispatches via importlib"). Fixture: `tests/fixtures/cross_file/` (`steps.yaml` registry + `runner.py` with `importlib`/`getattr`). The static repo still yields no cross-file reference, so fully resolved code is unaffected.
+4. **CONFIGURES-edge check** (`configures_references`). If the graph reports a `CONFIGURES` relation (a data file naming the symbol; the graph supports it for TOML/YAML/JSON), the edge is labelled `heuristic` and the analysis is marked partial, because data-driven dispatch may follow.
+5. **Pipeline executed as a Databricks job** (`ripple/databricks_job.py`, `--execute databricks`). Ripple generates a self-contained script embedding the base and head sources, uploads it as a workspace file under `/Workspace/Users/<me>/ripple/`, and submits a one-time **serverless** run (`spark_python_task`, `environments.spec.client = 4`). The job reads the published snapshot rows from `workspace.ripple.raw_transactions` for the `run_id`, executes both versions inside Databricks, and writes `clean_transactions` / `daily_revenue` with `version = base|head` through Spark. The SQL comparison then runs as before. The card shows the run id, URL, state and duration, and the script is kept under `evidence/databricks/jobs/`. If the job fails, the locally executed outputs are published instead and the card says so. `--execute local` (default) keeps the previous behaviour.
+6. **Unity Catalog lineage** (`discover_lineage`, `--no-lineage` to skip). With the Databricks backend, Ripple queries `system.access.table_lineage` for the configured input and output tables (last 30 days) and adds a lineage block to section 3: upstream tables, downstream tables, named readers (jobs, notebooks, dashboards) and table-to-table flows, labelled `source = unity-catalog-lineage` and **observed** (lineage is recorded when a query actually ran, so it is evidence of a real consumer). Configured mappings remain the explicit contract; lineage never replaces them, and absence of lineage is stated not to be evidence of no consumers. Because the job path writes through Spark, lineage `raw_transactions -> clean_transactions / daily_revenue` is recorded for job runs.
+7. **Execution failures are findings.** A base or head revision that fails to import or run (as the mangled `main` did) no longer crashes the review: the error is on the card and the verdict is `NEEDS-VERIFICATION` when no comparison could be made.
+8. Tests: `tests/test_next.py` (19 tests: cross-file scan precision, scan set, CONFIGURES, worktree lifecycle on a temporary git repo, job script and request shape, lineage parsing and rendering, execution errors). 56 tests pass.
+
 ## Checkpoint links and what each checkpoint proves
 1. Initial understanding and intended architecture: this commit.
 2. Last stable state before the Curveball: commit 97e3307, Entire checkpoint `01M1TY0G8KHGFN783A6VVB00QR`. Proves an end-to-end workflow: graph diff -> impact -> configured mapping -> intent -> execute both versions -> Databricks comparison -> review card, with 15 passing tests.
@@ -90,14 +102,18 @@ python3 -m ripple review --base main --head demo/abs-normalize --backend databri
 # control case: nothing changed -> PASS
 python3 -m ripple review --base main --head main
 
-# Curveball demo: dynamic-dispatch pipeline. The graph indexes the checked-out tree,
-# so check the dynamic branch out in a worktree and point --repo at it.
-git worktree add /tmp/dyn demo/dynamic-dispatch-abs && cp -r ripple /tmp/dyn/
-python3 -m ripple review --repo /tmp/dyn --base demo/dynamic-dispatch --head demo/dynamic-dispatch-abs   # BLOCK, partial banner, fallback
-python3 -m ripple review --repo /tmp/dyn --base demo/dynamic-dispatch --head demo/dynamic-dispatch-safe  # PASS verified by execution
+# Curveball demo: dynamic-dispatch pipeline. Ripple materialises --head in a temporary
+# worktree automatically, so this runs from the main checkout.
+python3 -m ripple review --base demo/dynamic-dispatch --head demo/dynamic-dispatch-abs   # BLOCK, partial banner, fallback
+python3 -m ripple review --base demo/dynamic-dispatch --head demo/dynamic-dispatch-safe  # PASS verified by execution
+
+# execute both versions AS A DATABRICKS JOB (serverless), compare on Databricks, add Unity Catalog lineage
+python3 -m ripple review --base main --head demo/abs-normalize --execute databricks --out evidence/review_card_demo_databricks_job.md
 ```
 
-Exit codes: 0 PASS, 1 BLOCK, 3 NEEDS-VERIFICATION (partial analysis and nothing executed), 2 graph error.
+Flags: `--execute local|databricks` (where the two versions run), `--backend local|databricks` (where the comparison is computed), `--no-worktree`, `--no-lineage`, `--no-entire-checkpoint`.
+
+Exit codes: 0 PASS, 1 BLOCK, 3 NEEDS-VERIFICATION (partial analysis and nothing executed, or execution failed), 2 graph error.
 
 `demo/abs-normalize` is the branch holding the seeded regression (`abs()` introduced in `normalize_amount`). The review card for it is checked in at `evidence/review_card_demo.md` (+ `.json`) as the fallback demo asset.
 
@@ -106,13 +122,14 @@ Opting in to Best Use of Databricks.
 
 - **Capabilities used:** Unity Catalog Delta tables (`workspace.ripple.raw_transactions`, `workspace.ripple.clean_transactions`, `workspace.ripple.daily_revenue`) and the serverless SQL warehouse (`c9a0bd38022ced72`) through the SQL Statement Execution API. Code: `ripple/databricks_backend.py`.
 - **Why essential:** the comparison that decides BLOCK vs PASS is computed as SQL on Databricks over both versions of the outputs, tagged with a `run_id`, so a reviewer can re-query the exact rows (`SELECT ... WHERE run_id = '...'`). The statement ids and SQL are printed on the card and saved to `evidence/databricks/last_run.json`.
-- **Execution model (honest scope):** the two Python versions are executed locally from git revisions over the snapshot; their outputs and the input snapshot are written to Delta, and the row-level and aggregate diff plus totals are computed on Databricks. Running the Python itself as a Databricks job is the next step (`databricks_job` in `ripple.toml` is a placeholder name).
+- **Execution model:** with `--execute databricks` the two Python versions run inside a serverless Databricks job (one-time run, `spark_python_task` on a generated workspace file) over the Delta snapshot, and write both outputs through Spark; with the default `--execute local` they run locally from git revisions and only the outputs are uploaded. In both cases the row-level and aggregate diff plus totals are computed on Databricks. `databricks_job` in `ripple.toml` is the run name.
+- **Lineage:** `system.access.table_lineage` is queried for the configured tables and shown as an observed, separately labelled source next to the configured mappings.
 - **Data provenance:** `data/raw_transactions.csv` is SYNTHETIC (seed 2026, 150 rows, `data/generate_snapshot.py`). No real or personal data.
 - **Fallback:** if the CLI or warehouse fails, the card falls back to the local comparison, says so in Notes, and points at the cached evidence file.
 - **Limitations:** Free Edition single 2X-Small warehouse (cold start about 1 minute); inserts use literal `VALUES` (fine for 150 rows, not for millions); no Unity Catalog lineage yet, data products are configured in `ripple.toml`.
 
 ## Known limitations and next steps
-- The dynamic-reference scan is Python-only and intentionally conservative (string constant + reflection in the same file). Cross-file registries (name in a YAML config, dispatch in another module) are not caught; the graph-signal path still applies. Next: scan the configured entry files for string constants that name *any* changed symbol across files, and add a CONFIGURES-edge check.
-- `entire graph` indexes the working tree, so impact for a head revision that is not checked out reflects the checked-out code; the demo uses a worktree. Next: run the impact query inside a temporary worktree at `head` automatically.
-- Execution of the two versions is local (git revision -> exec over the snapshot); Databricks stores the snapshot and both outputs and computes the comparison. Next: run the pipeline as a Databricks job so the fallback also executes there.
-- Mappings from entry point to data products are configured in `ripple.toml`; Unity Catalog lineage would let Ripple discover them and label those edges with their own evidence level.
+- The dynamic-reference scan is Python-only. The cross-file rule needs a reflection site somewhere in the scan set (changed files, entry files, their directories, configured extras); a registry consumed by code outside that set is not caught, and the graph-signal path still applies. Next: a `--scan-dir` sweep of the whole repository behind a flag, and support for other languages via the graph's own string-constant symbols.
+- The Databricks job embeds the entry file only; a pipeline spread over several modules would need the package uploaded (wheel or `import-dir`). Inserts of the snapshot still use literal `VALUES` (fine for 150 rows). One-time runs are not saved jobs, so they do not appear under Jobs in the UI (the run URL on the card opens them).
+- Lineage is limited to what Unity Catalog has observed in the last 30 days; readers outside Databricks (a BI tool pulling through JDBC) show as entity-less reads. Configured mappings therefore remain the source of record for data products.
+- `main` on GitHub still needs the restore PR merged (`ripple-next`); until then `--base main` executes the broken file and the card reports it as an execution error (NEEDS-VERIFICATION) instead of a comparison.

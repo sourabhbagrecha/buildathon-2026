@@ -1,0 +1,4 @@
+# Step registry for a data-driven pipeline: function NAMES live here, dispatch happens in runner.py.
+steps:
+  - normalize_amount   # sign handling
+  - daily_revenue

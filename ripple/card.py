@@ -37,6 +37,15 @@ class ReviewCard:
     partial_reasons: list[str] = field(default_factory=list)
     fallback_entry_points: list[str] = field(default_factory=list)
     executed_entry_points: list[str] = field(default_factory=list)
+    # Where the two versions ran: "local" (git revision -> exec) or "databricks-job" (serverless
+    # one-time run over the Delta snapshot). ``job_run`` holds run id, URL and state.
+    execution_mode: str = "local"
+    job_run: dict | None = None
+    execution_errors: list[str] = field(default_factory=list)
+    # How the graph saw `head`: a temporary worktree at head, or the checked-out tree.
+    head_tree_note: str = ""
+    # Unity Catalog lineage for the configured tables (source = unity-catalog-lineage, observed).
+    lineage: dict | None = None
 
     def to_dict(self) -> dict:
         d = asdict(self)
@@ -63,6 +72,9 @@ def decide(card: ReviewCard) -> str:
     if changed:
         return f"{BLOCK}: downstream data changed meaning; review against the stated intent"
     executed = bool(card.local_diffs) or bool(card.databricks)
+    if card.execution_errors and not executed:
+        return (f"{NEEDS_VERIFICATION}: execution of base or head failed ({card.execution_errors[0][:120]}); "
+                f"no comparison backs this change")
     if card.analysis == ANALYSIS_PARTIAL:
         if executed:
             return (f"{PASS}: outputs identical for base and head over the snapshot "
@@ -100,7 +112,10 @@ def render_markdown(card: ReviewCard) -> str:
         L.append("")
     ev = _evidence_summary(card)
     L.append(f"**Evidence:** analysis `{card.analysis}`; graph relations: {ev['confirmed']} confirmed, "
-             f"{ev['heuristic']} heuristic, {ev['needs-verification']} needs-verification")
+             f"{ev['heuristic']} heuristic, {ev['needs-verification']} needs-verification; "
+             f"execution `{card.execution_mode}`")
+    if card.head_tree_note:
+        L.append(f"- {card.head_tree_note}")
     L.append("")
     L.append("## 1. Original requirement (intent)")
     if card.intent.source == "none":
@@ -151,8 +166,38 @@ def render_markdown(card: ReviewCard) -> str:
         L.append(f"- Entry point `{m.entry_point}` -> job `{m.databricks_job}` [{how}]")
         L.append(f"  - Input: `{m.input_table}`; outputs: {', '.join('`' + t + '`' for t in m.output_tables)}")
         L.append(f"  - Data products: {', '.join(m.data_products)}")
+    if card.lineage is not None:
+        lin = card.lineage
+        if not lin.get("available"):
+            L.append(f"- Unity Catalog lineage (source = unity-catalog-lineage): unavailable ({lin.get('error', '?')}); "
+                     f"configured mappings only")
+        else:
+            L.append(f"- Unity Catalog lineage (source = unity-catalog-lineage, **observed** over the last "
+                     f"{lin.get('days', '?')} days, statement `{lin.get('statement_id', '?')}`):")
+            for t in lin.get("upstream_tables", []):
+                L.append(f"  - upstream: `{t}` -> configured tables")
+            for t in lin.get("downstream_tables", []):
+                L.append(f"  - downstream table: configured tables -> `{t}` **confirmed** (observed write)")
+            for r in lin.get("readers", []):
+                L.append(f"  - downstream reader: `{r}` **confirmed** (observed read)")
+            flows = [e for e in lin.get("edges", []) if e.get("source") and e.get("target")]
+            for e in flows[:6]:
+                L.append(f"  - flow `{e['source']}` -> `{e['target']}` (last seen {e.get('last_seen')}, {e.get('events')} event(s))")
+            if not (lin.get("upstream_tables") or lin.get("downstream_tables") or lin.get("readers") or flows):
+                L.append("  - no table-to-table flows or named readers observed; only ad-hoc reads/writes. "
+                         "Absence of lineage is not evidence of no consumers.")
+            L.append("  - Unity Catalog writes lineage asynchronously (observed lag: tens of minutes); events from this run appear on a later review. "
+                     "A job that collects rows to the driver records reads and writes as separate events, not one flow.")
     L.append("")
     L.append("## 4. Reproducible comparison (same input snapshot)")
+    if card.job_run:
+        jr = card.job_run
+        L.append(f"- Both versions executed **as a Databricks job** (serverless one-time run `{jr.get('run_id')}`, "
+                 f"{jr.get('result_state')}, {jr.get('duration_s')} s): {jr.get('run_page_url')}")
+        L.append(f"  - script: `{jr.get('python_file')}` (local copy `{jr.get('script_local', '?')}`); "
+                 f"reads `raw_transactions`, writes `clean_transactions` and `daily_revenue` for `version = base|head`")
+    for err in card.execution_errors:
+        L.append(f"- **Execution error:** {err}")
     for t in card.local_diffs:
         L.append(f"- `{t.table}` (key `{t.key}`): {t.rows_changed} of {t.rows_base} rows changed"
                  f"{', numeric delta ' + json.dumps(t.numeric_delta) if t.numeric_delta else ''}"
@@ -171,7 +216,8 @@ def render_markdown(card: ReviewCard) -> str:
         for r in db["agg_diff"]["rows"][:14]:
             L.append(f"  - {r[0]}: {r[1]} -> {r[2]} (delta {r[3]})")
         L.append(f"  - SQL statement ids: {json.dumps(db['statement_ids'])}")
-        L.append("  - Reproduce: `python3 -m ripple review --base {0} --head {1} --backend databricks`".format(card.base, card.head))
+        L.append("  - Reproduce: `python3 -m ripple review --base {0} --head {1} --backend databricks{2}`".format(
+            card.base, card.head, " --execute databricks" if card.job_run else ""))
     else:
         L.append("- Databricks comparison not run (local backend).")
     if card.notes:

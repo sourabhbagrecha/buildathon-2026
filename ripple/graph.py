@@ -47,6 +47,8 @@ BENIGN_WARNINGS = {"W_WORKTREE_SNAPSHOT"}
 # the caller list may be incomplete even when the graph says completeness is ok.
 DYNAMIC_CALLS = {"getattr": "getattr", "globals": "globals()", "vars": "vars()", "eval": "eval",
                  "exec": "exec", "__import__": "__import__"}
+# Non-Python files that can carry a symbol name as data (a registry, a step list, a job spec).
+CONFIG_SUFFIXES = {".yaml", ".yml", ".toml", ".json", ".ini", ".cfg"}
 # Regex fallback for files that do not parse.
 DYNAMIC_PATTERNS = (
     (r"\bgetattr\s*\(", "getattr"),
@@ -210,7 +212,7 @@ def parse_impact(data: dict, symbol: str, dynamic_references: list[DynamicRefere
                 evidence_reason=why,
             )
         )
-    dyn = list(dynamic_references or [])
+    dyn = list(dynamic_references or []) + configures_references(data)
     for ref in dyn:
         reasons.append(f"dynamic reference to `{symbol}` at {ref.file_path}:{ref.line} ({ref.reason}); "
                        f"the graph cannot resolve this path")
@@ -227,6 +229,48 @@ def parse_impact(data: dict, symbol: str, dynamic_references: list[DynamicRefere
     )
 
 
+def _string_constants(source: str, symbols: set[str]) -> tuple[dict[str, list[int]], list[tuple[int, str]], bool]:
+    """(symbol -> lines where it is a string constant, dispatch sites, parsed_ok) for one Python source."""
+    try:
+        tree = ast.parse(source)
+    except SyntaxError:
+        return {}, [], False
+    hits: dict[str, list[int]] = {}
+    dispatch: list[tuple[int, str]] = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Constant) and isinstance(node.value, str) and node.value in symbols:
+            hits.setdefault(node.value, []).append(node.lineno)
+        elif isinstance(node, ast.Call):
+            fn = node.func
+            label = None
+            if isinstance(fn, ast.Name) and fn.id in DYNAMIC_CALLS:
+                label = DYNAMIC_CALLS[fn.id]
+            elif isinstance(fn, ast.Attribute) and isinstance(fn.value, ast.Name) and fn.value.id == "importlib":
+                label = "importlib"
+            if label:
+                dispatch.append((node.lineno, label))
+        elif (isinstance(node, ast.Attribute) and node.attr == "modules"
+              and isinstance(node.value, ast.Name) and node.value.id == "sys"):
+            dispatch.append((node.lineno, "sys.modules"))
+    return hits, sorted(set(dispatch)), True
+
+
+def _string_constants_regex(lines: list[str], symbols: set[str]) -> tuple[dict[str, list[int]], list[tuple[int, str]]]:
+    hits: dict[str, list[int]] = {}
+    for sym in symbols:
+        pat = re.compile(r"[\"']" + re.escape(sym) + r"[\"']")
+        for i, ln in enumerate(lines, start=1):
+            if pat.search(ln.split("#", 1)[0]):
+                hits.setdefault(sym, []).append(i)
+    dispatch = []
+    for i, ln in enumerate(lines, start=1):
+        for pat, label in DYNAMIC_PATTERNS:
+            if re.search(pat, ln.split("#", 1)[0]):
+                dispatch.append((i, label))
+                break
+    return hits, dispatch
+
+
 def scan_dynamic_references(source: str, symbol: str, file_path: str) -> list[DynamicReference]:
     """Find places where ``symbol`` is referenced as DATA rather than as a call.
 
@@ -240,50 +284,100 @@ def scan_dynamic_references(source: str, symbol: str, file_path: str) -> list[Dy
     the file does not parse (the graph would be partial for that file anyway).
     """
     lines = source.splitlines()
-    try:
-        tree = ast.parse(source)
-    except SyntaxError:
+    hits, dispatch, ok = _string_constants(source, {symbol})
+    if not ok:
         return _scan_dynamic_references_regex(lines, symbol, file_path)
-    string_hits: list[int] = []
-    dispatch_hits: list[tuple[int, str]] = []
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Constant) and node.value == symbol:
-            string_hits.append(node.lineno)
-        elif isinstance(node, ast.Call):
-            fn = node.func
-            label = None
-            if isinstance(fn, ast.Name) and fn.id in DYNAMIC_CALLS:
-                label = DYNAMIC_CALLS[fn.id]
-            elif isinstance(fn, ast.Attribute) and isinstance(fn.value, ast.Name) and fn.value.id == "importlib":
-                label = "importlib"
-            if label:
-                dispatch_hits.append((node.lineno, label))
-        elif (isinstance(node, ast.Attribute) and node.attr == "modules"
-              and isinstance(node.value, ast.Name) and node.value.id == "sys"):
-            dispatch_hits.append((node.lineno, "sys.modules"))
-    if not string_hits or not dispatch_hits:
+    string_hits = hits.get(symbol, [])
+    if not string_hits or not dispatch:
         return []
     refs = [DynamicReference(file_path, i, lines[i - 1].strip(), "symbol name used as a string literal")
             for i in sorted(set(string_hits))]
     refs += [DynamicReference(file_path, i, lines[i - 1].strip(), f"reflection/dynamic dispatch via {label}")
-             for i, label in sorted(set(dispatch_hits))]
+             for i, label in dispatch]
     return refs
 
 
 def _scan_dynamic_references_regex(lines: list[str], symbol: str, file_path: str) -> list[DynamicReference]:
-    string_ref = re.compile(r"[\"']" + re.escape(symbol) + r"[\"']")
-    string_hits = [i for i, ln in enumerate(lines, start=1) if string_ref.search(ln.split("#", 1)[0])]
-    dispatch_hits = []
-    for i, ln in enumerate(lines, start=1):
-        for pat, label in DYNAMIC_PATTERNS:
-            if re.search(pat, ln.split("#", 1)[0]):
-                dispatch_hits.append((i, label))
-                break
-    if not string_hits or not dispatch_hits:
+    hits, dispatch = _string_constants_regex(lines, {symbol})
+    string_hits = hits.get(symbol, [])
+    if not string_hits or not dispatch:
         return []
     refs = [DynamicReference(file_path, i, lines[i - 1].strip(), "symbol name used as a string literal") for i in string_hits]
     refs += [DynamicReference(file_path, i, lines[i - 1].strip(), f"reflection/dynamic dispatch via {label}")
-             for i, label in dispatch_hits]
+             for i, label in dispatch]
+    return refs
+
+
+def _config_name_hits(lines: list[str], symbols: set[str], suffix: str) -> dict[str, list[int]]:
+    """Lines of a YAML/TOML/JSON/INI file where a symbol appears as a bare token (key or value)."""
+    comment = None if suffix == ".json" else "#"
+    hits: dict[str, list[int]] = {}
+    for sym in symbols:
+        pat = re.compile(r"(?<![\w.])" + re.escape(sym) + r"(?![\w.])")
+        for i, ln in enumerate(lines, start=1):
+            body = ln.split(comment, 1)[0] if comment else ln
+            if pat.search(body):
+                hits.setdefault(sym, []).append(i)
+    return hits
+
+
+def scan_cross_file_references(files: dict[str, str], symbols: set[str]) -> dict[str, list[DynamicReference]]:
+    """Cross-file dynamic references: a changed symbol's NAME is data in file A while a
+    *different* Python file B in the same scan set dispatches by reflection.
+
+    ``files`` maps repo-relative path -> content for the scan set (changed Python files, the
+    configured entry files, their sibling modules and package-local config files). Python
+    files contribute string constants (AST) and dispatch sites; config files (YAML/TOML/JSON/
+    INI) contribute bare-token name hits only. Same-file pairs are left to
+    ``scan_dynamic_references`` so they are not reported twice. Returns refs per symbol.
+    """
+    name_hits: dict[str, dict[str, list[int]]] = {}       # file -> symbol -> lines
+    dispatch_files: dict[str, list[tuple[int, str]]] = {}  # python file -> dispatch sites
+    for path, source in files.items():
+        suffix = Path(path).suffix
+        lines = source.splitlines()
+        if suffix == ".py":
+            hits, dispatch, ok = _string_constants(source, symbols)
+            if not ok:
+                hits, dispatch = _string_constants_regex(lines, symbols)
+            if hits:
+                name_hits[path] = hits
+            if dispatch:
+                dispatch_files[path] = dispatch
+        elif suffix in CONFIG_SUFFIXES:
+            hits = _config_name_hits(lines, symbols, suffix)
+            if hits:
+                name_hits[path] = hits
+    out: dict[str, list[DynamicReference]] = {}
+    for a, per_symbol in name_hits.items():
+        for b, dispatch in dispatch_files.items():
+            if a == b:
+                continue
+            d_line, d_label = dispatch[0]
+            for sym, lines_hit in per_symbol.items():
+                a_lines = files[a].splitlines()
+                for i in sorted(set(lines_hit)):
+                    out.setdefault(sym, []).append(DynamicReference(
+                        a, i, a_lines[i - 1].strip(),
+                        f"cross-file: name appears as data here; `{b}:{d_line}` dispatches via {d_label}"))
+    return out
+
+
+def configures_references(data: dict) -> list[DynamicReference]:
+    """CONFIGURES edges the graph found (a data file naming this symbol): dispatch may be data-driven."""
+    refs: list[DynamicReference] = []
+    for section, block in data.items():
+        if not isinstance(block, dict):
+            continue
+        for e in block.get("entries") or []:
+            if (e.get("relation") or "") != "CONFIGURES":
+                continue
+            ep = e.get("endpoint") or {}
+            cs = e.get("call_site") or {}
+            refs.append(DynamicReference(ep.get("file_path") or cs.get("file_path") or "?",
+                                         cs.get("line") or ep.get("start_line") or 0,
+                                         ep.get("name", "?"),
+                                         f"CONFIGURES edge reported by the graph ({section})"))
     return refs
 
 
@@ -293,13 +387,18 @@ def graph_diff(repo: Path, base: str, head: str) -> DiffResult:
 
 
 def graph_impact(repo: Path, symbol: str, file_path: str | None = None, depth: int = 2,
-                 scan_files: list[str] | None = None) -> ImpactResult:
+                 scan_files: list[str] | None = None,
+                 extra_references: list[DynamicReference] | None = None) -> ImpactResult:
+    """Run `entire graph impact` against ``repo`` (the head tree) and attach Ripple's own scans.
+
+    ``extra_references`` are cross-file references found by ``scan_cross_file_references``.
+    """
     cmd = ["entire", "graph", "impact", "--repo", str(repo), "--symbol", symbol,
            "--depth", str(depth), "--format", "json", "--profile", "full"]
     if file_path:
         cmd += ["--file", file_path]
     data = _run(cmd, repo)
-    dyn: list[DynamicReference] = []
+    dyn: list[DynamicReference] = list(extra_references or [])
     for f in dict.fromkeys([file_path, *(scan_files or [])]):
         if not f:
             continue
@@ -321,3 +420,38 @@ def analysis_state(impacts: list[ImpactResult], failed: int = 0) -> tuple[str, l
     if failed:
         reasons.append(f"{failed} impact quer{'y' if failed == 1 else 'ies'} failed")
     return (ANALYSIS_PARTIAL if reasons else ANALYSIS_COMPLETE), reasons
+
+
+def scan_set(root: Path, changed_files: list[str], entry_files: list[str],
+             config_files: list[str] | None = None, extra_dirs: list[str] | None = None) -> dict[str, str]:
+    """Files Ripple scans for dynamic references, read from ``root`` (the head tree).
+
+    Changed Python files, configured entry files, every Python and config file in their
+    directories (a registry usually lives next to the code it dispatches), plus explicitly
+    configured config files and directories. Test directories are excluded unless a changed
+    or entry file lives there.
+    """
+    wanted: dict[str, str] = {}
+    dirs: list[str] = []
+    for f in [*changed_files, *entry_files]:
+        d = str(Path(f).parent)
+        if d not in dirs:
+            dirs.append(d)
+    for d in extra_dirs or []:
+        if d not in dirs:
+            dirs.append(d)
+    candidates = list(dict.fromkeys([*changed_files, *entry_files, *(config_files or [])]))
+    for d in dirs:
+        dpath = root / d
+        if dpath.is_dir():
+            for p in sorted(dpath.iterdir()):
+                if p.is_file() and (p.suffix == ".py" or p.suffix in CONFIG_SUFFIXES):
+                    candidates.append(str(p.relative_to(root)))
+    for rel in dict.fromkeys(candidates):
+        p = root / rel
+        if p.is_file() and (p.suffix == ".py" or p.suffix in CONFIG_SUFFIXES):
+            try:
+                wanted[rel] = p.read_text()
+            except (OSError, UnicodeDecodeError):
+                continue
+    return wanted

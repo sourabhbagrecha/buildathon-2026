@@ -6,7 +6,7 @@
 source = "configured"
 entry_point = "pipeline.transactions:run"
 entry_file = "pipeline/transactions.py"
-databricks_job = "ripple_transactions_job"        # placeholder job / notebook name
+databricks_job = "ripple_transactions_job"        # run name of the serverless one-time job (--execute databricks)
 databricks_warehouse_id = "c9a0bd38022ced72"
 input_table = "workspace.ripple.raw_transactions"
 output_tables = ["workspace.ripple.clean_transactions", "workspace.ripple.daily_revenue"]
@@ -19,3 +19,9 @@ intent_query = "refunds negative"
 csv = "data/raw_transactions.csv"
 key_clean = "txn_id"
 key_daily = "txn_date"
+
+# Optional extra inputs for Ripple's dynamic-reference scan. Registries or step lists that name
+# pipeline functions but live outside the entry files' directories go here.
+[scan]
+config_files = []
+extra_dirs = []

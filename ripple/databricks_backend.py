@@ -95,18 +95,27 @@ def ensure_tables(warehouse_id: str) -> list[str]:
     return ids
 
 
-def publish_run(warehouse_id: str, run_id: str, raw: list[dict], base_out: dict, head_out: dict) -> list[str]:
-    ids = []
-    raw_cols = ["run_id", "txn_id", "txn_date", "customer_id", "kind", "amount"]
-    ids.append(execute_sql(warehouse_id, f"DELETE FROM {SCHEMA}.raw_transactions WHERE run_id = {_lit(run_id)}").statement_id)
+RAW_COLS = ["run_id", "txn_id", "txn_date", "customer_id", "kind", "amount"]
+OUTPUT_COLS = {
+    "clean_transactions": ["run_id", "version", "txn_id", "txn_date", "customer_id", "kind", "amount"],
+    "daily_revenue": ["run_id", "version", "txn_date", "net_revenue", "txn_count"],
+}
+
+
+def publish_snapshot(warehouse_id: str, run_id: str, raw: list[dict]) -> list[str]:
+    """Write the input snapshot for ``run_id`` to Delta (both versions read exactly these rows)."""
+    ids = [execute_sql(warehouse_id, f"DELETE FROM {SCHEMA}.raw_transactions WHERE run_id = {_lit(run_id)}").statement_id]
     ids.append(execute_sql(
         warehouse_id,
-        f"INSERT INTO {SCHEMA}.raw_transactions ({', '.join(raw_cols)}) VALUES\n" + _values(raw, raw_cols, {"run_id": run_id}),
+        f"INSERT INTO {SCHEMA}.raw_transactions ({', '.join(RAW_COLS)}) VALUES\n" + _values(raw, RAW_COLS, {"run_id": run_id}),
     ).statement_id)
-    for table, cols in (
-        ("clean_transactions", ["run_id", "version", "txn_id", "txn_date", "customer_id", "kind", "amount"]),
-        ("daily_revenue", ["run_id", "version", "txn_date", "net_revenue", "txn_count"]),
-    ):
+    return ids
+
+
+def publish_outputs(warehouse_id: str, run_id: str, base_out: dict, head_out: dict) -> list[str]:
+    """Write locally executed base/head outputs to Delta (used when execution is local)."""
+    ids = []
+    for table, cols in OUTPUT_COLS.items():
         ids.append(execute_sql(warehouse_id, f"DELETE FROM {SCHEMA}.{table} WHERE run_id = {_lit(run_id)}").statement_id)
         for version, out in (("base", base_out), ("head", head_out)):
             ids.append(execute_sql(
@@ -115,6 +124,10 @@ def publish_run(warehouse_id: str, run_id: str, raw: list[dict], base_out: dict,
                 + _values(out[table], cols, {"run_id": run_id, "version": version}),
             ).statement_id)
     return ids
+
+
+def publish_run(warehouse_id: str, run_id: str, raw: list[dict], base_out: dict, head_out: dict) -> list[str]:
+    return publish_snapshot(warehouse_id, run_id, raw) + publish_outputs(warehouse_id, run_id, base_out, head_out)
 
 
 ROW_DIFF_SQL = """
@@ -170,3 +183,61 @@ def compare_run(warehouse_id: str, run_id: str) -> dict:
 def save_evidence(path: Path, payload: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, default=str))
+
+
+LINEAGE_SQL = """
+SELECT source_table_full_name, target_table_full_name, entity_type, entity_id,
+       MAX(event_time) AS last_seen, COUNT(*) AS events
+FROM system.access.table_lineage
+WHERE event_time >= DATE_SUB(CURRENT_TIMESTAMP(), {days})
+  AND (source_table_full_name IN ({tables}) OR target_table_full_name IN ({tables}))
+GROUP BY source_table_full_name, target_table_full_name, entity_type, entity_id
+ORDER BY last_seen DESC
+""".strip()
+
+
+def parse_lineage(tables: list[str], columns: list[str], rows: list[list]) -> dict:
+    """Turn `system.access.table_lineage` rows into upstream / downstream edges for ``tables``.
+
+    Rows with both source and target are table-to-table flows. Rows with only a source are
+    reads by an entity (notebook, job, dashboard, or an ad-hoc query when entity_type is
+    NULL); rows with only a target are writes. Only edges touching ``tables`` are kept.
+    """
+    ours = set(tables)
+    edges: list[dict] = []
+    upstream: set[str] = set()
+    downstream: set[str] = set()
+    readers: set[str] = set()
+    for r in rows:
+        d = dict(zip(columns, r))
+        src, tgt = d.get("source_table_full_name"), d.get("target_table_full_name")
+        ent = d.get("entity_type")
+        edges.append({"source": src, "target": tgt, "entity_type": ent, "entity_id": d.get("entity_id"),
+                      "last_seen": d.get("last_seen"), "events": int(d.get("events") or 0)})
+        if src and tgt:
+            if src in ours and tgt not in ours:
+                downstream.add(tgt)
+            if tgt in ours and src not in ours:
+                upstream.add(src)
+        elif src in ours and ent:
+            readers.add(f"{ent}:{d.get('entity_id')}")
+    return {"available": True, "tables": tables, "edges": edges,
+            "upstream_tables": sorted(upstream), "downstream_tables": sorted(downstream),
+            "readers": sorted(readers)}
+
+
+def discover_lineage(warehouse_id: str, tables: list[str], days: int = 30) -> dict:
+    """Unity Catalog lineage for the configured tables; ``available = False`` (with reason) on failure.
+
+    Lineage is OBSERVED (recorded when a query ran), so an edge here is evidence of an actual
+    consumer, not a guess. Absence of edges is not evidence of no consumers.
+    """
+    sql = LINEAGE_SQL.format(days=int(days), tables=", ".join(_lit(t) for t in tables))
+    try:
+        res = execute_sql(warehouse_id, sql)
+    except DatabricksError as exc:
+        return {"available": False, "tables": tables, "error": str(exc)[:300], "sql": sql,
+                "edges": [], "upstream_tables": [], "downstream_tables": [], "readers": []}
+    out = parse_lineage(tables, res.columns, res.rows)
+    out.update({"statement_id": res.statement_id, "sql": sql, "days": days})
+    return out
