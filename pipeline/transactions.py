@@ -17,10 +17,8 @@ STEP_REGISTRY = {
 
 
 def normalize_amount(amount: float, kind: str) -> float:
-    magnitude = round(float(amount), 2)
-    if kind == "refund":
-        return -magnitude
-    return magnitude
+    # "Normalize" amounts: always non-negative.
+    return abs(round(float(amount), 2))
 
 
 def apply_step(step: str, *args):
