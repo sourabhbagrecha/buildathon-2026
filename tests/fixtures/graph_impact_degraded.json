@@ -1,0 +1,143 @@
+{
+ "format_version": 1,
+ "repo_root": "/Users/hinalbagrecha/Sourabh Projects/buildathon/buildathon-2026",
+ "commit": "3ecff2de5e735e80d9b07ffbb7ac2b0aba77d975",
+ "tree": "712b83cd30ca16508b05818fe43845b9ed0765a8",
+ "profile": "full",
+ "query": "normalize_amount",
+ "file": "tests/fixtures/transactions_dynamic_dispatch.py",
+ "depth": 2,
+ "index_cache_hit": false,
+ "index_latency_ms": 282,
+ "query_latency_ms": 0,
+ "total_latency_ms": 282,
+ "focus_matches_total": 1,
+ "degenerate": true,
+ "degenerate_reason": "no callers, callees or type consumers",
+ "disambiguation_required": false,
+ "focus": {
+  "id": "local/buildathon-2026:Python:tests/fixtures/transactions_dynamic_dispatch.py:function:normalize_amount",
+  "name": "normalize_amount",
+  "qualified_name": "normalize_amount",
+  "kind": "function",
+  "file_path": "tests/fixtures/transactions_dynamic_dispatch.py",
+  "start_line": 20,
+  "end_line": 24,
+  "language": "Python"
+ },
+ "callers": {
+  "total": 1,
+  "direct": 1,
+  "transitive": 0,
+  "in": 1,
+  "entries": [
+   {
+    "endpoint": {
+     "name": "run",
+     "qualified_name": "run",
+     "kind": "function",
+     "file_path": "tests/fixtures/transactions_dynamic_dispatch.py",
+     "start_line": 63,
+     "end_line": 66,
+     "language": "Python"
+    },
+    "relation": "DATA_FLOWS",
+    "direction": "in",
+    "depth": 1
+   }
+  ]
+ },
+ "callees": {
+  "total": 0,
+  "entries": []
+ },
+ "type_consumers": {
+  "total": 0,
+  "entries": []
+ },
+ "data_flows": {
+  "total": 0,
+  "entries": []
+ },
+ "co_changes": {
+  "total": 0,
+  "entries": []
+ },
+ "siblings": {
+  "total": 0,
+  "entries": []
+ },
+ "warnings": [
+  {
+   "code": "W_WORKTREE_SNAPSHOT",
+   "severity": "warning",
+   "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+  },
+  {
+   "code": "W_UNRESOLVED_CALLS",
+   "severity": "warning",
+   "effect_on_semantic_completeness": "3 call expressions could not be resolved to a definition"
+  }
+ ],
+ "partial_failures": [
+  {
+   "file_path": "tests/fixtures/transactions_dynamic_dispatch.py",
+   "code": "E_PARSE_TIMEOUT",
+   "message": "parser timed out; call relations for this file are incomplete"
+  }
+ ],
+ "stats": {
+  "files": 40,
+  "parsed_files": 40,
+  "symbols": 263,
+  "relations": 731,
+  "partial_failures": 1,
+  "completeness_level": "partial"
+ },
+ "completeness": {
+  "languages": {
+   "Git Ignore": {
+    "files": 2,
+    "symbols": 2
+   },
+   "JSON": {
+    "files": 8,
+    "symbols": 125
+   },
+   "Markdown": {
+    "files": 8,
+    "symbols": 38
+   },
+   "Python": {
+    "files": 21,
+    "symbols": 82
+   },
+   "TOML": {
+    "files": 1,
+    "symbols": 16
+   }
+  },
+  "relations": {
+   "CALLS": 99,
+   "CONFIGURES": 141,
+   "CONSTRUCTS": 19,
+   "CONTAINS": 19,
+   "DATA_FLOWS": 25,
+   "DEFINES": 263,
+   "EXTENDS": 7,
+   "FILE_CHANGES_WITH": 1,
+   "IMPORTS": 119,
+   "INHERITS": 7,
+   "PARAM_TYPE": 3,
+   "RETURNS_TYPE": 10,
+   "SIMILAR_TO": 5,
+   "USES_TYPE": 13
+  }
+ },
+ "completeness_scope": {
+  "language": "Python",
+  "language_files": 21,
+  "worktree_snapshot": true,
+  "level": "partial"
+ }
+}

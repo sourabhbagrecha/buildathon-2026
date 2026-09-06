@@ -1,0 +1,21 @@
+{
+  "base": "main",
+  "head": "demo/abs-normalize",
+  "files": [
+    {
+      "path": "pipeline/transactions.py",
+      "status": "M",
+      "language": "Python",
+      "changes": [
+        {
+          "type": "body_changed",
+          "kind": "function",
+          "name": "normalize_amount",
+          "before_start_line": 13,
+          "after_start_line": 13,
+          "dependents_count": 1
+        }
+      ]
+    }
+  ]
+}
