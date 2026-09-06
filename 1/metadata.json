@@ -1,0 +1,83 @@
+{
+  "cli_version": "0.10.5",
+  "checkpoint_id": "01M1V124D75T56BXPP096FYZF6",
+  "session_id": "a9d40c46-de0a-4cc8-b576-977cfe3e7f30",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-06T09:33:45.946616Z",
+  "branch": "ripple-next",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [
+    "pipeline/transactions.py",
+    "ripple/worktree.py"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-fable-5-1",
+  "turn_id": "ff72d7a6cf18",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 360,
+    "cache_creation_tokens": 69525,
+    "cache_read_tokens": 958425,
+    "output_tokens": 18022,
+    "api_call_count": 15
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "claude-skill-toolu_01XnRRRcTwBhuaj5b8dobYX7",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "dataviz"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "ff72d7a6cf18",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 34,
+        "end": 35,
+        "entry_ids": [
+          "24d34fb0-e11b-4798-a1b2-823081c391b9"
+        ],
+        "tool_use_id": "toolu_01XnRRRcTwBhuaj5b8dobYX7"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "toolu_01XnRRRcTwBhuaj5b8dobYX7"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: dataviz",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-06T09:33:45.81447Z",
+    "agent_lines": 63,
+    "agent_removed": 0,
+    "human_added": 1780,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 1843,
+    "total_lines_changed": 1924,
+    "agent_percentage": 3.2744282744282747,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
