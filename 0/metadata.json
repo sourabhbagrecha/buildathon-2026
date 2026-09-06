@@ -1,0 +1,52 @@
+{
+  "cli_version": "0.10.5",
+  "checkpoint_id": "01M1V2DXPW66C6SNYZ4D4GV90Q",
+  "session_id": "e5d47ae1-afa9-4747-acda-05ccffbab485",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-06T09:57:40.531143Z",
+  "branch": "ripple-next",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [
+    "evidence/DEMO_PLAYBOOK.md",
+    "evidence/databricks/last_run.json"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-fable-5-1",
+  "turn_id": "447c4f5f53b5",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 322,
+    "cache_creation_tokens": 68601,
+    "cache_read_tokens": 704612,
+    "output_tokens": 13147,
+    "api_call_count": 11
+  },
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-06T09:57:40.50582Z",
+    "agent_lines": 215,
+    "agent_removed": 19,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 215,
+    "total_lines_changed": 234,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 667,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "evidence/ripple_overview.html": 667
+      }
+    }
+  ]
+}
