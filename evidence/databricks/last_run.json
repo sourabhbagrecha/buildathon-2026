@@ -1,17 +1,17 @@
 {
   "backend": "databricks",
   "schema": "workspace.ripple",
-  "run_id": "268c4ec..demo/abs-normalize@20260906T092954Z",
+  "run_id": "268c4ec..demo/abs-normalize@20260906T095345Z",
   "warehouse_id": "c9a0bd38022ced72",
   "statement_ids": {
-    "row_diff": "01f1a9d5-b90b-1ecb-8dd0-4ed0839bb942",
-    "agg_diff": "01f1a9d5-bd1a-166d-b3de-cc56fae78a03",
-    "summary": "01f1a9d5-c0e3-14ee-941a-8c80c4f93098"
+    "row_diff": "01f1a9d8-f493-1674-a771-ef709252abfd",
+    "agg_diff": "01f1a9d8-f659-1be0-bc3e-a8dcc65477b7",
+    "summary": "01f1a9d8-f81c-1bca-a2dd-0fedfc029e58"
   },
   "sql": {
-    "row_diff": "SELECT b.txn_id, b.kind, b.amount AS base_amount, h.amount AS head_amount,\n       ROUND(h.amount - b.amount, 2) AS delta\nFROM workspace.ripple.clean_transactions b\nJOIN workspace.ripple.clean_transactions h\n  ON b.txn_id = h.txn_id AND b.run_id = h.run_id\nWHERE b.run_id = '268c4ec..demo/abs-normalize@20260906T092954Z' AND b.version = 'base' AND h.version = 'head'\n  AND NOT (b.amount <=> h.amount)\nORDER BY b.txn_id",
-    "agg_diff": "SELECT b.txn_date, b.net_revenue AS base_net_revenue, h.net_revenue AS head_net_revenue,\n       ROUND(h.net_revenue - b.net_revenue, 2) AS delta\nFROM workspace.ripple.daily_revenue b\nJOIN workspace.ripple.daily_revenue h\n  ON b.txn_date = h.txn_date AND b.run_id = h.run_id\nWHERE b.run_id = '268c4ec..demo/abs-normalize@20260906T092954Z' AND b.version = 'base' AND h.version = 'head'\n  AND NOT (b.net_revenue <=> h.net_revenue)\nORDER BY b.txn_date",
-    "summary": "SELECT\n  (SELECT COUNT(*) FROM workspace.ripple.clean_transactions WHERE run_id = '268c4ec..demo/abs-normalize@20260906T092954Z' AND version = 'base') AS rows_base,\n  (SELECT COUNT(*) FROM workspace.ripple.clean_transactions WHERE run_id = '268c4ec..demo/abs-normalize@20260906T092954Z' AND version = 'head') AS rows_head,\n  (SELECT ROUND(SUM(net_revenue), 2) FROM workspace.ripple.daily_revenue WHERE run_id = '268c4ec..demo/abs-normalize@20260906T092954Z' AND version = 'base') AS total_base,\n  (SELECT ROUND(SUM(net_revenue), 2) FROM workspace.ripple.daily_revenue WHERE run_id = '268c4ec..demo/abs-normalize@20260906T092954Z' AND version = 'head') AS total_head"
+    "row_diff": "SELECT b.txn_id, b.kind, b.amount AS base_amount, h.amount AS head_amount,\n       ROUND(h.amount - b.amount, 2) AS delta\nFROM workspace.ripple.clean_transactions b\nJOIN workspace.ripple.clean_transactions h\n  ON b.txn_id = h.txn_id AND b.run_id = h.run_id\nWHERE b.run_id = '268c4ec..demo/abs-normalize@20260906T095345Z' AND b.version = 'base' AND h.version = 'head'\n  AND NOT (b.amount <=> h.amount)\nORDER BY b.txn_id",
+    "agg_diff": "SELECT b.txn_date, b.net_revenue AS base_net_revenue, h.net_revenue AS head_net_revenue,\n       ROUND(h.net_revenue - b.net_revenue, 2) AS delta\nFROM workspace.ripple.daily_revenue b\nJOIN workspace.ripple.daily_revenue h\n  ON b.txn_date = h.txn_date AND b.run_id = h.run_id\nWHERE b.run_id = '268c4ec..demo/abs-normalize@20260906T095345Z' AND b.version = 'base' AND h.version = 'head'\n  AND NOT (b.net_revenue <=> h.net_revenue)\nORDER BY b.txn_date",
+    "summary": "SELECT\n  (SELECT COUNT(*) FROM workspace.ripple.clean_transactions WHERE run_id = '268c4ec..demo/abs-normalize@20260906T095345Z' AND version = 'base') AS rows_base,\n  (SELECT COUNT(*) FROM workspace.ripple.clean_transactions WHERE run_id = '268c4ec..demo/abs-normalize@20260906T095345Z' AND version = 'head') AS rows_head,\n  (SELECT ROUND(SUM(net_revenue), 2) FROM workspace.ripple.daily_revenue WHERE run_id = '268c4ec..demo/abs-normalize@20260906T095345Z' AND version = 'base') AS total_base,\n  (SELECT ROUND(SUM(net_revenue), 2) FROM workspace.ripple.daily_revenue WHERE run_id = '268c4ec..demo/abs-normalize@20260906T095345Z' AND version = 'head') AS total_head"
   },
   "row_diff": {
     "columns": [
@@ -348,17 +348,5 @@
     "rows_head": "150",
     "total_base": "13854.1",
     "total_head": "18033.82"
-  },
-  "job_run": {
-    "run_id": 43140873411386,
-    "run_name": "ripple_transactions_job 268c4ec..demo/abs-normalize@20260906T092954Z",
-    "run_page_url": "https://dbc-d87cc10e-1ac0.cloud.databricks.com/?o=7474652145876856#job/399281511823673/run/43140873411386",
-    "life_cycle_state": "TERMINATED",
-    "result_state": "SUCCESS",
-    "state_message": "",
-    "duration_s": 52.1,
-    "python_file": "/Workspace/Users/sourabhbagrecha@gmail.com/ripple/ripple_exec_268c4ec..demo_abs-normalize_20260906T092954Z.py",
-    "compute": "serverless",
-    "script_local": "evidence/databricks/jobs/ripple_exec_268c4ec..demo_abs-normalize_20260906T092954Z.py"
   }
 }

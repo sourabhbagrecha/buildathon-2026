@@ -1,0 +1,667 @@
+<title>Ripple</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --ground: #F2F4F6;
+    --surface: #FFFFFF;
+    --surface-2: #E6EAEE;
+    --ink: #101E2B;
+    --ink-2: #3E4F5E;
+    --muted: #6F8090;
+    --line: #CBD3DA;
+    --accent: #1F7A8C;
+    --accent-ink: #145A68;
+    --accent-soft: rgba(31,122,140,.12);
+    --block: #B8352B;
+    --block-soft: rgba(184,53,43,.12);
+    --pass: #22754B;
+    --pass-soft: rgba(34,117,75,.12);
+    --verify: #A66A0B;
+    --verify-soft: rgba(166,106,11,.14);
+    --code-bg: #0F1B26;
+    --code-fg: #DCE5EC;
+    --code-add: #7FD8A4;
+    --code-del: #FF8C7E;
+    --code-dim: #7E93A6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0B151F;
+      --surface: #12202D;
+      --surface-2: #1A2A39;
+      --ink: #E7EEF3;
+      --ink-2: #B7C5D0;
+      --muted: #7F93A6;
+      --line: #2A3B4B;
+      --accent: #5FC4D6;
+      --accent-ink: #8FD9E6;
+      --accent-soft: rgba(95,196,214,.14);
+      --block: #FF7A6B;
+      --block-soft: rgba(255,122,107,.14);
+      --pass: #66D39A;
+      --pass-soft: rgba(102,211,154,.14);
+      --verify: #F2BE5C;
+      --verify-soft: rgba(242,190,92,.16);
+      --code-bg: #08121A;
+      --code-fg: #DCE5EC;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #0B151F;
+    --surface: #12202D;
+    --surface-2: #1A2A39;
+    --ink: #E7EEF3;
+    --ink-2: #B7C5D0;
+    --muted: #7F93A6;
+    --line: #2A3B4B;
+    --accent: #5FC4D6;
+    --accent-ink: #8FD9E6;
+    --accent-soft: rgba(95,196,214,.14);
+    --block: #FF7A6B;
+    --block-soft: rgba(255,122,107,.14);
+    --pass: #66D39A;
+    --pass-soft: rgba(102,211,154,.14);
+    --verify: #F2BE5C;
+    --verify-soft: rgba(242,190,92,.16);
+    --code-bg: #08121A;
+    --code-fg: #DCE5EC;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-snap-type: y proximity; scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.5;
+  }
+  .deck { display: flex; flex-direction: column; }
+  .slide {
+    scroll-snap-align: start;
+    min-height: 100svh;
+    padding: clamp(28px, 5vh, 56px) clamp(24px, 6vw, 96px);
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 20px;
+    border-bottom: 1px solid var(--line);
+    position: relative;
+  }
+  .slide-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+  .eyebrow {
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    font-size: 12.5px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .eyebrow .num {
+    font-weight: 500;
+    color: var(--accent);
+    padding: 2px 7px;
+    border: 1px solid var(--accent);
+    border-radius: 3px;
+  }
+  .slide-foot {
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    font-size: 12px; color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .slide-body { display: grid; align-content: center; gap: 22px; }
+  h1, h2 {
+    font-family: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -.015em;
+    margin: 0;
+    text-wrap: balance;
+  }
+  h1 { font-size: clamp(56px, 9vw, 128px); font-weight: 700; letter-spacing: -.03em; }
+  h2 { font-size: clamp(30px, 4.2vw, 52px); max-width: 22ch; }
+  h3 {
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-size: 20px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em;
+  }
+  p { margin: 0; max-width: 62ch; color: var(--ink-2); }
+  p.lede { font-size: clamp(19px, 2vw, 24px); color: var(--ink); max-width: 40ch; line-height: 1.35; }
+  strong { color: var(--ink); font-weight: 600; }
+  code, .mono {
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    font-size: .92em;
+  }
+  code { background: var(--surface-2); padding: 1px 5px; border-radius: 3px; color: var(--ink); }
+  pre {
+    margin: 0;
+    background: var(--code-bg);
+    color: var(--code-fg);
+    padding: 18px 22px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  pre .add { color: var(--code-add); }
+  pre .del { color: var(--code-del); }
+  pre .dim { color: var(--code-dim); }
+  pre .hl { color: #FFD479; }
+
+  .cols { display: grid; gap: 28px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); align-items: start; }
+  .cols-2 { grid-template-columns: 1.1fr .9fr; }
+  @media (max-width: 820px) { .cols-2 { grid-template-columns: 1fr; } }
+
+  ul.plain { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  ul.plain li { padding-left: 18px; position: relative; color: var(--ink-2); }
+  ul.plain li::before { content: ""; position: absolute; left: 0; top: .62em; width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--accent); }
+
+  .kv { display: grid; grid-template-columns: max-content 1fr; gap: 8px 20px; align-items: baseline; }
+  .kv dt { font-family: "IBM Plex Mono", monospace; font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .kv dd { margin: 0; color: var(--ink-2); }
+
+  .pill {
+    display: inline-block; font-family: "IBM Plex Mono", monospace; font-size: 12px; font-weight: 500;
+    letter-spacing: .06em; padding: 3px 9px; border-radius: 3px; white-space: nowrap;
+  }
+  .pill.block { color: var(--block); background: var(--block-soft); }
+  .pill.pass { color: var(--pass); background: var(--pass-soft); }
+  .pill.verify { color: var(--verify); background: var(--verify-soft); }
+  .pill.accent { color: var(--accent-ink); background: var(--accent-soft); }
+
+  /* stat row */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; }
+  .stat { border-top: 2px solid var(--line); padding-top: 10px; }
+  .stat .v { font-family: "Bricolage Grotesque", sans-serif; font-size: 34px; font-weight: 600; letter-spacing: -.02em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .stat .v.block { color: var(--block); }
+  .stat .l { font-size: 13px; color: var(--muted); margin-top: 6px; }
+
+  /* review card mock */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 18px 22px;
+    font-size: 14.5px;
+    display: grid; gap: 12px;
+    box-shadow: 0 8px 30px rgba(6, 20, 32, .10);
+  }
+  .card .title { font-family: "IBM Plex Mono", monospace; font-size: 13px; color: var(--muted); }
+  .card .verdict { font-family: "Bricolage Grotesque", sans-serif; font-size: 22px; font-weight: 600; display: flex; align-items: center; gap: 12px; }
+  .card section { border-top: 1px solid var(--line); padding-top: 10px; }
+  .card section h4 { margin: 0 0 6px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  .card section p, .card section li { color: var(--ink-2); font-size: 14px; }
+  .card ul { margin: 0; padding-left: 18px; display: grid; gap: 3px; }
+  .card .banner { background: var(--verify-soft); border-left: 3px solid var(--verify); padding: 8px 12px; border-radius: 0 4px 4px 0; font-size: 13.5px; color: var(--ink); }
+  .neg { color: var(--block); }
+
+  table { border-collapse: collapse; width: 100%; font-size: 15px; }
+  th { text-align: left; font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 500; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--line); }
+  td { padding: 10px 12px 10px 0; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink-2); }
+  td:first-child { color: var(--ink); font-weight: 500; }
+  .table-wrap { overflow-x: auto; }
+
+  /* pipeline flow */
+  .flow { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; align-items: stretch; }
+  .flow .step { background: var(--surface); border: 1px solid var(--line); border-radius: 5px; padding: 12px 12px 10px; display: grid; gap: 6px; align-content: start; }
+  .flow .step .n { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--accent); letter-spacing: .1em; }
+  .flow .step .t { font-weight: 600; font-size: 14px; line-height: 1.25; color: var(--ink); }
+  .flow .step .d { font-size: 12.5px; color: var(--muted); line-height: 1.35; }
+  .flow .step.db { border-color: var(--accent); }
+  @media (max-width: 1000px) { .flow { grid-template-columns: repeat(4, 1fr); } }
+  @media (max-width: 640px) { .flow { grid-template-columns: repeat(2, 1fr); } }
+
+  /* ripple diagram */
+  .ripple-svg { width: 100%; max-width: 620px; height: auto; display: block; margin: 0 auto; }
+  .ripple-svg text { font-family: "IBM Plex Sans", sans-serif; fill: var(--ink); }
+  .ripple-svg .lab { font-family: "IBM Plex Mono", monospace; font-size: 11px; fill: var(--muted); letter-spacing: .08em; }
+  .ripple-svg .ring { fill: none; stroke: var(--accent); }
+  .ripple-svg .src { fill: var(--block); }
+
+  .title-slide { grid-template-rows: auto 1fr auto; }
+  .title-slide .slide-body { gap: 28px; }
+  .title-mark { width: 120px; height: 120px; }
+  .title-mark circle { fill: none; stroke: var(--accent); }
+  .title-mark .core { fill: var(--block); stroke: none; }
+  .title-meta { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  .criteria-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+  .criteria-grid .c { border-top: 2px solid var(--accent); padding-top: 10px; }
+  .criteria-grid .c .k { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--accent); letter-spacing: .1em; }
+  .criteria-grid .c .t { font-weight: 600; margin: 2px 0 4px; }
+  .criteria-grid .c .d { font-size: 14px; color: var(--muted); }
+
+  .nav-hint { position: fixed; right: 18px; bottom: 14px; font-family: "IBM Plex Mono", monospace; font-size: 11.5px; color: var(--muted); background: var(--surface); border: 1px solid var(--line); padding: 4px 9px; border-radius: 3px; opacity: .9; }
+  @page { size: 1280px 720px; margin: 0; }
+  @media print {
+    html { scroll-snap-type: none; }
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .deck { display: block; }
+    .slide { min-height: 0; height: 720px; overflow: hidden; padding: 40px 72px; break-after: page; page-break-after: always; border: 0; }
+    .slide:last-child { break-after: auto; page-break-after: auto; }
+    .card { box-shadow: none; }
+    .nav-hint { display: none; }
+  }
+  a { color: var(--accent-ink); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>
+
+<div class="deck" id="deck">
+
+<!-- 1. Title -->
+<section class="slide title-slide" id="s1">
+  <div class="slide-head">
+    <div class="eyebrow">Entire Buildathon 2026 <span>·</span> Track 2: Graph Intelligence</div>
+    <div class="eyebrow">6 September 2026</div>
+  </div>
+  <div class="slide-body">
+    <svg class="title-mark" viewBox="0 0 120 120" aria-hidden="true">
+      <circle cx="60" cy="60" r="8" class="core"></circle>
+      <circle cx="60" cy="60" r="22" stroke-width="2" opacity=".95"></circle>
+      <circle cx="60" cy="60" r="38" stroke-width="1.6" opacity=".7"></circle>
+      <circle cx="60" cy="60" r="54" stroke-width="1.2" opacity=".45"></circle>
+    </svg>
+    <div>
+      <h1>Ripple</h1>
+      <p class="lede">Git shows what changed. Ripple shows which data products changed meaning, by how much, and whether that contradicts the original intent.</p>
+    </div>
+    <div class="title-meta">
+      <span class="pill accent">Entire Graph</span>
+      <span class="pill accent">Entire Checkpoints</span>
+      <span class="pill accent">Databricks: Unity Catalog + SQL warehouse</span>
+      <span class="pill accent">Python stdlib only</span>
+    </div>
+  </div>
+  <div class="slide-foot"><span>Sourabh Bagrecha</span><span>1 / 11</span></div>
+</section>
+
+<!-- 2. User -->
+<section class="slide" id="s2">
+  <div class="slide-head">
+    <div class="eyebrow"><span class="num">01</span> A clearly defined user</div>
+  </div>
+  <div class="slide-body">
+    <h2>The reviewer of a data pipeline change who has to say BLOCK or PASS.</h2>
+    <div class="cols cols-2">
+      <div>
+        <p class="lede">A data engineer, or the human behind a coding agent, looking at a small diff in a transformation pipeline minutes before it ships.</p>
+      </div>
+      <div>
+        <h3>What that person needs</h3>
+        <ul class="plain">
+          <li><strong>Which tables and dashboards</strong> this diff reaches, not just which functions.</li>
+          <li><strong>How much the output moves</strong> on the same input, row by row and in aggregate.</li>
+          <li><strong>What the code was supposed to guarantee</strong>, next to the evidence that it no longer does.</li>
+          <li><strong>Something they can re-query</strong> themselves rather than trust a tool's summary.</li>
+        </ul>
+      </div>
+    </div>
+    <dl class="kv">
+      <dt>Secondary stakeholder</dt>
+      <dd>Finance, the consumer of the "Daily Revenue dashboard" and the "month-end close extract". They never see the diff, only its consequences.</dd>
+    </dl>
+  </div>
+  <div class="slide-foot"><span>Ripple</span><span>2 / 11</span></div>
+</section>
+
+<!-- 3. Problem -->
+<section class="slide" id="s3">
+  <div class="slide-head">
+    <div class="eyebrow"><span class="num">02</span> A meaningful problem</div>
+  </div>
+  <div class="slide-body">
+    <h2>A harmless-looking diff. Tests pass. Revenue is overstated by 30%.</h2>
+    <div class="cols cols-2">
+      <div>
+        <pre><span class="dim">pipeline/transactions.py   normalize_amount()</span>
+
+<span class="del">-    magnitude = round(float(amount), 2)</span>
+<span class="add">+    # Normalize transaction amounts: coerce to a clean non-negative magnitude.</span>
+<span class="add">+    magnitude = round(abs(float(amount)), 2)</span>
+     if kind == "refund":
+<span class="del">-        return -magnitude</span>
+<span class="add">+        return abs(-magnitude)</span>
+     return magnitude</pre>
+      </div>
+      <div style="display:grid;gap:18px">
+        <p>The documented intent, recorded in an Entire checkpoint, says <strong>refunds must remain negative</strong> because daily net revenue is <code>sum(amount)</code>. The agent "normalizing amounts" flipped every refund positive.</p>
+        <div class="stats">
+          <div class="stat"><div class="v">13,854.10</div><div class="l">net revenue, base</div></div>
+          <div class="stat"><div class="v block">18,033.82</div><div class="l">net revenue, head</div></div>
+          <div class="stat"><div class="v">33 / 150</div><div class="l">rows changed, exactly the refunds</div></div>
+          <div class="stat"><div class="v">13 / 14</div><div class="l">days with a different total</div></div>
+        </div>
+        <p>Git answers <em>what</em> changed. Nothing in the review loop answers <em>which data products</em>, <em>by how much</em>, or <em>against which requirement</em>. The reviewer guesses, or re-runs everything.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot"><span>Ripple</span><span>3 / 11</span></div>
+</section>
+
+<!-- 4. Solution scope -->
+<section class="slide" id="s4">
+  <div class="slide-head">
+    <div class="eyebrow"><span class="num">03</span> A focused solution</div>
+  </div>
+  <div class="slide-body">
+    <h2>One command. Seven steps. One review card.</h2>
+    <div class="flow">
+      <div class="step"><div class="n">1 · GRAPH</div><div class="t">entire graph diff</div><div class="d">base..head → changed symbols, e.g. <code>normalize_amount</code></div></div>
+      <div class="step"><div class="n">2 · GRAPH</div><div class="t">entire graph impact</div><div class="d">callers and data flows → pipeline entry points</div></div>
+      <div class="step"><div class="n">3 · CONFIGURED</div><div class="t">ripple.toml mapping</div><div class="d">entry point → Databricks job, input and output tables, data products</div></div>
+      <div class="step"><div class="n">4 · CHECKPOINT</div><div class="t">Intent lookup</div><div class="d">INTENT.md plus <code>entire checkpoint</code> for the affected pipeline</div></div>
+      <div class="step"><div class="n">5 · EXECUTE</div><div class="t">Run base and head</div><div class="d">both versions over the same input snapshot</div></div>
+      <div class="step db"><div class="n">6 · DATABRICKS</div><div class="t">Compare in SQL</div><div class="d">row-level and aggregate diff on the warehouse, tagged with a run_id</div></div>
+      <div class="step"><div class="n">7 · CARD</div><div class="t">Review card</div><div class="d">intent, source lines, data products, reproducible comparison, verdict</div></div>
+    </div>
+    <div class="cols">
+      <div>
+        <h3>Scope chosen for the event window</h3>
+        <ul class="plain">
+          <li>One Python pipeline, three Delta tables, one aggregate: daily net revenue.</li>
+          <li>One seeded regression: <code>abs()</code> introduced while "normalizing amounts".</li>
+          <li>Source-to-job mapping is configured, not discovered, and labelled as such on the card.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Why Entire is essential</h3>
+        <ul class="plain">
+          <li>Without the graph, Ripple would re-run every pipeline on every change.</li>
+          <li>Without checkpoints, the card could show a delta but not the requirement it violates.</li>
+          <li>Graph output is treated as evidence, not an oracle. Every relation carries a confidence label.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot"><span>Ripple</span><span>4 / 11</span></div>
+</section>
+
+<!-- 5. The ripple: mechanism diagram -->
+<section class="slide" id="s5">
+  <div class="slide-head">
+    <div class="eyebrow"><span class="num">03</span> How a change ripples outward</div>
+  </div>
+  <div class="slide-body">
+    <div class="cols cols-2">
+      <svg class="ripple-svg" viewBox="0 0 620 400" role="img" aria-label="Concentric rings: a changed function at the centre, then callers, entry point, Delta tables, and data products on the outer ring">
+        <g transform="translate(200,200)">
+          <circle class="ring" r="190" stroke-width="1" opacity=".35"></circle>
+          <circle class="ring" r="145" stroke-width="1.2" opacity=".55"></circle>
+          <circle class="ring" r="100" stroke-width="1.5" opacity=".75"></circle>
+          <circle class="ring" r="55" stroke-width="2"></circle>
+          <circle class="src" r="11"></circle>
+          <text x="0" y="-22" text-anchor="middle" font-size="12" font-weight="600" font-family="IBM Plex Mono, monospace">normalize_amount</text>
+          <text x="0" y="32" text-anchor="middle" class="lab">changed · line 13</text>
+        </g>
+        <!-- ring labels along the right side -->
+        <g font-size="13">
+          <text x="270" y="150" font-weight="600">clean_transactions</text>
+          <text x="270" y="167" class="lab">CALLS · line 40 · confirmed</text>
+          <text x="316" y="100" font-weight="600">run</text>
+          <text x="316" y="117" class="lab">CALLS · line 62 · entry point</text>
+          <text x="360" y="52" font-weight="600">clean_transactions · daily_revenue</text>
+          <text x="360" y="69" class="lab">Delta tables · source = configured</text>
+          <text x="400" y="330" font-weight="600">Daily Revenue dashboard</text>
+          <text x="400" y="347" font-weight="600">Finance month-end close extract</text>
+          <text x="400" y="364" class="lab">data products · source = configured</text>
+        </g>
+        <g stroke="var(--line)" stroke-width="1" stroke-dasharray="3 3">
+          <line x1="255" y1="200" x2="265" y2="150"></line>
+          <line x1="300" y1="200" x2="312" y2="100"></line>
+          <line x1="345" y1="200" x2="356" y2="52"></line>
+          <line x1="390" y1="200" x2="396" y2="325"></line>
+        </g>
+      </svg>
+      <div style="display:grid;gap:16px;align-content:center">
+        <h2 style="font-size:clamp(26px,3vw,38px)">Graph edges reach the entry point. Configuration reaches the data.</h2>
+        <p>The two inner rings come from <code>entire graph impact</code> and are labelled <code>[CALLS, entire-graph]</code> with their call-site line. The two outer rings come from <code>ripple.toml</code> and are labelled <code>source = configured</code>. The card never blurs the two.</p>
+        <p>Then the decisive step: execute both versions over the same 150-row snapshot and let Databricks compute the difference.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot"><span>Ripple</span><span>5 / 11</span></div>
+</section>
+
+<!-- 6. Working core: review card -->
+<section class="slide" id="s6">
+  <div class="slide-head">
+    <div class="eyebrow"><span class="num">04</span> A working core experience</div>
+  </div>
+  <div class="slide-body">
+    <div class="cols cols-2">
+      <div class="card" aria-label="Excerpt of the generated review card">
+        <div class="title">evidence/review_card_demo.md · <code>main</code> → <code>demo/abs-normalize</code></div>
+        <div class="verdict"><span class="pill block">BLOCK</span> downstream data changed meaning</div>
+        <section>
+          <h4>1 · Original requirement (intent)</h4>
+          <p>Refunds must remain negative. Daily net revenue is <code>sum(amount)</code> and is only correct if this holds. Source: <code>pipeline/INTENT.md</code>, checkpoint <code>01M1TVFK…</code></p>
+        </section>
+        <section>
+          <h4>2 · Source locations (entire-graph)</h4>
+          <ul>
+            <li><code>normalize_amount</code> · transactions.py:13 · body_changed</li>
+            <li>depth 1: <code>clean_transactions</code> · call site line 40 · <strong>confirmed</strong></li>
+            <li>depth 2: <code>run</code> via clean_transactions · call site line 62 · <strong>confirmed</strong></li>
+          </ul>
+        </section>
+        <section>
+          <h4>3 · Affected data products (configured)</h4>
+          <p>workspace.ripple.clean_transactions, workspace.ripple.daily_revenue → Daily Revenue dashboard, Finance month-end close extract</p>
+        </section>
+        <section>
+          <h4>4 · Reproducible comparison</h4>
+          <ul>
+            <li>T0001 amount <span class="neg">-62.79</span> → 62.79 (and 32 more refund rows)</li>
+            <li>2026-08-12 net_revenue <span class="neg">-135.29</span> → 135.29</li>
+            <li>Databricks run_id <code>main..demo/abs-normalize@20260906T083720Z</code>, three SQL statement ids</li>
+          </ul>
+        </section>
+      </div>
+      <div style="display:grid;gap:18px;align-content:center">
+        <h2 style="font-size:clamp(26px,3vw,38px)">Anyone can run it, read it, and re-query it.</h2>
+        <pre><span class="dim"># 37 tests, stdlib only</span>
+python3 -m unittest discover -s tests
+
+<span class="dim"># seeded regression → exit 1 (BLOCK)</span>
+python3 -m ripple review --base main --head demo/abs-normalize
+
+<span class="dim"># same, compared on Databricks</span>
+python3 -m ripple review --base main --head demo/abs-normalize \
+  --backend databricks
+
+<span class="dim"># control: nothing changed → exit 0 (PASS)</span>
+python3 -m ripple review --base main --head main</pre>
+        <p>Exit codes: <code>0</code> PASS, <code>1</code> BLOCK, <code>3</code> NEEDS-VERIFICATION, <code>2</code> graph error. Cards are written as Markdown and JSON, and the Databricks statement ids let the reviewer open the exact rows in the warehouse.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot"><span>Ripple</span><span>6 / 11</span></div>
+</section>
+
+<!-- 7. Curveball -->
+<section class="slide" id="s7">
+  <div class="slide-head">
+    <div class="eyebrow"><span class="num">04</span> Noon Curveball: the graph is evidence, not an oracle</div>
+  </div>
+  <div class="slide-body">
+    <h2>Zero callers and "completeness: ok" can both be true while the graph is wrong.</h2>
+    <div class="cols cols-2">
+      <div style="display:grid;gap:16px">
+        <p>We rerouted the same pipeline through a string registry and <code>globals()</code>. The real graph output: <strong>0 callers, completeness ok, no partial failures.</strong> The MVP would have returned PASS without executing anything. The graph does not know what it missed, so its own signals cannot flag it.</p>
+        <pre><span class="dim">tests/fixtures/transactions_dynamic_dispatch.py</span>
+STEP_REGISTRY = {"normalize": <span class="hl">"normalize_amount"</span>, ...}
+fn = <span class="hl">globals()</span>[STEP_REGISTRY[step]]</pre>
+        <div class="card" style="box-shadow:none">
+          <div class="banner"><strong>PARTIAL ANALYSIS.</strong> The call graph may be missing callers of the changed code. Graph relationships are labelled per edge; nothing here is PASS on graph evidence alone.<br>· dynamic reference at transactions.py:13 (symbol name as string literal)<br>· dynamic reference at transactions.py:26 (reflection via globals())<br>· Fallback: executed <code>pipeline.transactions:run</code> even though the graph did not reach it.</div>
+          <div class="title">Evidence: analysis partial; 2 confirmed, 0 heuristic, 2 needs-verification</div>
+        </div>
+      </div>
+      <div style="display:grid;gap:14px;align-content:start">
+        <h3>What changed, smallest complete revision</h3>
+        <ul class="plain">
+          <li><strong>Tri-state label on every edge:</strong> <span class="pill pass">confirmed</span> structural CALLS with call site · <span class="pill verify">heuristic</span> data-flow, co-change, or a degraded graph run · <span class="pill block">needs-verification</span> no call site, or a path only Ripple's scan sees.</li>
+          <li><strong>Partial detection from two sources:</strong> the graph's own warnings and completeness fields, plus a Ripple-side AST scan for a symbol name used as a string constant in a file that also uses reflection.</li>
+          <li><strong>Safe fallback = execute anyway.</strong> Configured entry points the graph did not reach are run and compared. Execute-and-compare is the verification path.</li>
+          <li><strong>New verdict:</strong> NEEDS-VERIFICATION, exit 3, when analysis is partial and nothing was executed. PASS on graph evidence alone is impossible in the partial state.</li>
+        </ul>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Branch pair</th><th>Graph</th><th>Verdict</th></tr></thead>
+          <tbody>
+            <tr><td>main → abs-normalize</td><td>4 confirmed edges, no banner</td><td><span class="pill block">BLOCK</span></td></tr>
+            <tr><td>dynamic → dynamic-abs</td><td>0 callers, banner, fallback ran</td><td><span class="pill block">BLOCK</span> 33/150 rows</td></tr>
+            <tr><td>dynamic → dynamic-safe</td><td>0 callers, banner, fallback ran</td><td><span class="pill pass">PASS</span> verified by execution</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot"><span>Ripple · 22 new tests, original 15 unchanged</span><span>7 / 11</span></div>
+</section>
+
+<!-- 8. Databricks -->
+<section class="slide" id="s8">
+  <div class="slide-head">
+    <div class="eyebrow"><span class="num">04</span> Best Use of Databricks</div>
+  </div>
+  <div class="slide-body">
+    <h2>The BLOCK decision is a SQL result a reviewer can re-run.</h2>
+    <div class="cols">
+      <div>
+        <h3>What runs where</h3>
+        <ul class="plain">
+          <li>Snapshot and both outputs land in Unity Catalog Delta tables under <code>workspace.ripple</code>, tagged with a <code>run_id</code>.</li>
+          <li>Row-level diff, aggregate diff and totals are computed on the serverless SQL warehouse through the Statement Execution API.</li>
+          <li>The three statement ids and the SQL are printed on the card and saved to <code>evidence/databricks/last_run.json</code>.</li>
+        </ul>
+      </div>
+      <div>
+        <pre><span class="dim">-- daily_revenue, base vs head, same run_id</span>
+SELECT b.txn_date,
+       b.net_revenue AS base,
+       h.net_revenue AS head,
+       h.net_revenue - b.net_revenue AS delta
+FROM   workspace.ripple.daily_revenue b
+JOIN   workspace.ripple.daily_revenue h
+  ON   b.txn_date = h.txn_date
+WHERE  b.run_id = '&lt;run_id&gt;' AND b.version = 'base'
+  AND  h.run_id = '&lt;run_id&gt;' AND h.version = 'head'
+  AND  b.net_revenue &lt;&gt; h.net_revenue;
+
+<span class="dim">-- 2026-08-12:  -135.29 → 135.29  (delta 270.58)</span></pre>
+      </div>
+      <div>
+        <h3>Honest scope</h3>
+        <ul class="plain">
+          <li>The two Python versions execute locally from git revisions. Databricks stores and compares. Running the pipeline as a Databricks job is the next step.</li>
+          <li>Free Edition, one 2X-Small warehouse, about 1 minute cold start. Whole review about 70 s.</li>
+          <li>Inserts use literal VALUES: fine for 150 rows, not for millions.</li>
+          <li>If the CLI or warehouse fails, the card falls back to the local comparison and says so.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot"><span>Ripple</span><span>8 / 11</span></div>
+</section>
+
+<!-- 9. Transparency -->
+<section class="slide" id="s9">
+  <div class="slide-head">
+    <div class="eyebrow"><span class="num">05</span> Transparent implementation</div>
+  </div>
+  <div class="slide-body">
+    <h2>What we built, what we used, and who wrote it.</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Category</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td>Prior work</td><td>None. Empty git history at 13:10 on event day. No prior codebase, no template.</td></tr>
+        <tr><td>External services</td><td>Entire CLI with the Graph plugin v0.4.0 (diff, impact, search, checkpoints). Databricks Free Edition: Unity Catalog, serverless SQL warehouse, Statement Execution API via the <code>databricks</code> CLI. GitHub for the repo mirror.</td></tr>
+        <tr><td>Open-source dependencies</td><td>Python 3.11 standard library only. No pip packages. <code>git</code>.</td></tr>
+        <tr><td>AI-generated components</td><td>The product code, tests and docs were written by coding-agent sessions (Claude Code) directed by the team, in four checkpointed sessions. Every session is recorded as an Entire checkpoint and in <code>progress.md</code>. The seeded regression on <code>demo/abs-normalize</code> is deliberately hand-specified.</td></tr>
+        <tr><td>Data</td><td><code>data/raw_transactions.csv</code> is synthetic: seed 2026, 150 rows, generated by <code>data/generate_snapshot.py</code>. No real or personal data.</td></tr>
+        <tr><td>Hand-configured</td><td><code>ripple.toml</code> maps entry point → job, tables, data products and intent. Labelled <code>source = configured</code> on every card.</td></tr>
+      </tbody>
+    </table></div>
+    <dl class="kv">
+      <dt>Checkpoint 1</dt><dd>Intent and architecture before any code. Commit <code>ab574b4</code>.</dd>
+      <dt>Checkpoint 2</dt><dd>MVP end to end, 15 tests. Commit <code>97e3307</code>, Entire <code>01M1TY0G8KHGFN783A6VVB00QR</code>.</dd>
+      <dt>Checkpoint 3</dt><dd>Curveball response, 37 tests. Commit <code>8cf3d61</code>, Entire <code>01M1TYWW6PB644YRN2KZXMKCP3</code>.</dd>
+      <dt>Checkpoint 4</dt><dd>Final verification and semantic diff of the response, 57 entity changes. Commit <code>3f24ec9</code>, Entire <code>01M1TYYB3Y2QA3NY7Y5FXFQFM4</code>.</dd>
+    </dl>
+  </div>
+  <div class="slide-foot"><span>Ripple · evidence/graph, evidence/databricks, BUILDATHON.md</span><span>9 / 11</span></div>
+</section>
+
+<!-- 10. Continuation -->
+<section class="slide" id="s10">
+  <div class="slide-head">
+    <div class="eyebrow"><span class="num">06</span> A practical continuation path</div>
+  </div>
+  <div class="slide-body">
+    <h2>Known limits today, and the next concrete step for each.</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Limitation now</th><th>Next step</th></tr></thead>
+      <tbody>
+        <tr><td>Dynamic-reference scan is Python-only and same-file: a name in YAML dispatched from another module is not caught (the graph-signal path still applies).</td><td>Scan configured entry files for string constants naming any changed symbol across files; add a CONFIGURES-edge check.</td></tr>
+        <tr><td><code>entire graph</code> indexes the working tree, so impact for a head revision that is not checked out reflects the checked-out code. The demo uses a worktree.</td><td>Run the impact query inside a temporary worktree at <code>head</code> automatically.</td></tr>
+        <tr><td>Both pipeline versions execute locally. Databricks stores and compares.</td><td>Run the pipeline as a Databricks job so the fallback executes there too, and batch inserts for large snapshots.</td></tr>
+        <tr><td>Entry point → data product mappings are hand-configured in <code>ripple.toml</code>.</td><td>Read Unity Catalog lineage to discover them, and label those edges with their own evidence level.</td></tr>
+        <tr><td>One pipeline, one aggregate, one warehouse.</td><td>Multi-pipeline repos, a CI gate on the exit code, and the card posted as a PR comment.</td></tr>
+      </tbody>
+    </table></div>
+    <p>What it takes to become a reliable product: automatic worktree indexing, job-based execution on Databricks, lineage-driven mappings, and a CI integration. Each is a bounded change to one module of a 1,000-line package.</p>
+  </div>
+  <div class="slide-foot"><span>Ripple</span><span>10 / 11</span></div>
+</section>
+
+<!-- 11. Close -->
+<section class="slide" id="s11">
+  <div class="slide-head">
+    <div class="eyebrow">Summary</div>
+  </div>
+  <div class="slide-body">
+    <h2>Requirement, code location, and data evidence on one card. Every relationship labelled by how much to trust it.</h2>
+    <div class="criteria-grid">
+      <div class="c"><div class="k">01</div><div class="t">User</div><div class="d">The reviewer who must say BLOCK or PASS on a pipeline change.</div></div>
+      <div class="c"><div class="k">02</div><div class="t">Problem</div><div class="d">Diffs look harmless; downstream data silently changes meaning.</div></div>
+      <div class="c"><div class="k">03</div><div class="t">Solution</div><div class="d">Graph diff → impact → intent → execute both → compare on Databricks.</div></div>
+      <div class="c"><div class="k">04</div><div class="t">Working core</div><div class="d">One command, 37 tests, three live cards, re-queryable SQL.</div></div>
+      <div class="c"><div class="k">05</div><div class="t">Transparency</div><div class="d">Stdlib only, synthetic data, agent-written code, four checkpoints.</div></div>
+      <div class="c"><div class="k">06</div><div class="t">Continuation</div><div class="d">Worktree indexing, Databricks jobs, lineage, CI gate.</div></div>
+    </div>
+    <pre>git clone &lt;repo&gt; &amp;&amp; cd buildathon-2026
+python3 -m unittest discover -s tests            <span class="dim"># 37 OK</span>
+python3 -m ripple review --base main --head demo/abs-normalize --backend databricks</pre>
+  </div>
+  <div class="slide-foot"><span>Ripple · Track 2 · Best Use of Databricks</span><span>11 / 11</span></div>
+</section>
+
+</div>
+<div class="nav-hint">← → or space to move · P to print</div>
+
+<script>
+(function () {
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  function current() {
+    var y = window.scrollY + window.innerHeight / 2;
+    for (var i = slides.length - 1; i >= 0; i--) {
+      if (slides[i].offsetTop <= y) return i;
+    }
+    return 0;
+  }
+  function go(i) {
+    i = Math.max(0, Math.min(slides.length - 1, i));
+    slides[i].scrollIntoView({ block: 'start' });
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.target && /input|textarea/i.test(e.target.tagName)) return;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); go(current() + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); go(current() - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); go(0); }
+    else if (e.key === 'End') { e.preventDefault(); go(slides.length - 1); }
+    else if (e.key === 'p' || e.key === 'P') { window.print(); }
+  });
+})();
+</script>
