@@ -1,0 +1,751 @@
+{
+  "base": "main",
+  "head": "demo/abs-normalize",
+  "intent": {
+    "requirement": "Refunds must remain negative. `normalize_amount` derives the sign of an amount from the transaction kind: purchases positive, refunds negative. Daily net revenue (`daily_revenue`) is `sum(amount)` per day and is only correct if this holds.",
+    "intent_file": "pipeline/INTENT.md",
+    "checkpoint_id": "01M1TVFK5MAS7B1JFN41QA2JQ8",
+    "checkpoint_snippet": "w transformations against the same input snapshot.\n\nThe demo: A checkpoint says refunds must remain negative. An agent introduces abs(amount) while \u201cnormalizing transaction amounts.\u201d Ripple traces the changed helper to the transaction pipeline, executes both versions, and shows p",
+    "source": "intent-file+checkpoint"
+  },
+  "changed": [
+    {
+      "name": "normalize_amount",
+      "kind": "function",
+      "file_path": "pipeline/transactions.py",
+      "change_type": "body_changed",
+      "dependents_count": 1,
+      "line": 13
+    }
+  ],
+  "impacts": [
+    {
+      "symbol": "normalize_amount",
+      "callers": [
+        {
+          "name": "clean_transactions",
+          "file_path": "pipeline/transactions.py",
+          "start_line": 26,
+          "depth": 1,
+          "via": null,
+          "call_site_line": 40
+        },
+        {
+          "name": "run",
+          "file_path": "pipeline/transactions.py",
+          "start_line": 60,
+          "depth": 2,
+          "via": "clean_transactions",
+          "call_site_line": 62
+        }
+      ],
+      "warnings": [
+        {
+          "code": "W_WORKTREE_SNAPSHOT",
+          "severity": "warning",
+          "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+        }
+      ],
+      "partial_failures": [],
+      "completeness_level": "ok"
+    }
+  ],
+  "reached_entry_points": [
+    {
+      "name": "run",
+      "file_path": "pipeline/transactions.py",
+      "start_line": 60,
+      "depth": 2,
+      "via": "clean_transactions",
+      "call_site_line": 62
+    }
+  ],
+  "mappings": [
+    {
+      "source": "configured",
+      "entry_point": "pipeline.transactions:run",
+      "entry_file": "pipeline/transactions.py",
+      "databricks_job": "ripple_transactions_job",
+      "databricks_warehouse_id": "c9a0bd38022ced72",
+      "input_table": "workspace.ripple.raw_transactions",
+      "output_tables": [
+        "workspace.ripple.clean_transactions",
+        "workspace.ripple.daily_revenue"
+      ],
+      "data_products": [
+        "Daily Revenue dashboard",
+        "Finance month-end close extract"
+      ],
+      "intent_file": "pipeline/INTENT.md",
+      "intent_checkpoint": "01M1TVFK5MAS7B1JFN41QA2JQ8",
+      "intent_query": "refunds negative"
+    }
+  ],
+  "local_diffs": [
+    {
+      "table": "clean_transactions",
+      "key": "txn_id",
+      "rows_base": 150,
+      "rows_head": 150,
+      "rows_changed": 33,
+      "only_in_base": 0,
+      "only_in_head": 0,
+      "diffs": [
+        {
+          "key": "T0001",
+          "column": "amount",
+          "base": -62.79,
+          "head": 62.79
+        },
+        {
+          "key": "T0010",
+          "column": "amount",
+          "base": -66.88,
+          "head": 66.88
+        },
+        {
+          "key": "T0011",
+          "column": "amount",
+          "base": -79.15,
+          "head": 79.15
+        },
+        {
+          "key": "T0025",
+          "column": "amount",
+          "base": -80.4,
+          "head": 80.4
+        },
+        {
+          "key": "T0027",
+          "column": "amount",
+          "base": -60.84,
+          "head": 60.84
+        },
+        {
+          "key": "T0033",
+          "column": "amount",
+          "base": -90.97,
+          "head": 90.97
+        },
+        {
+          "key": "T0038",
+          "column": "amount",
+          "base": -41.05,
+          "head": 41.05
+        },
+        {
+          "key": "T0050",
+          "column": "amount",
+          "base": -76.68,
+          "head": 76.68
+        },
+        {
+          "key": "T0051",
+          "column": "amount",
+          "base": -86.75,
+          "head": 86.75
+        },
+        {
+          "key": "T0052",
+          "column": "amount",
+          "base": -79.43,
+          "head": 79.43
+        },
+        {
+          "key": "T0055",
+          "column": "amount",
+          "base": -65.94,
+          "head": 65.94
+        },
+        {
+          "key": "T0067",
+          "column": "amount",
+          "base": -87.34,
+          "head": 87.34
+        },
+        {
+          "key": "T0070",
+          "column": "amount",
+          "base": -55.15,
+          "head": 55.15
+        },
+        {
+          "key": "T0074",
+          "column": "amount",
+          "base": -52.34,
+          "head": 52.34
+        },
+        {
+          "key": "T0076",
+          "column": "amount",
+          "base": -19.15,
+          "head": 19.15
+        },
+        {
+          "key": "T0079",
+          "column": "amount",
+          "base": -51.48,
+          "head": 51.48
+        },
+        {
+          "key": "T0088",
+          "column": "amount",
+          "base": -19.45,
+          "head": 19.45
+        },
+        {
+          "key": "T0091",
+          "column": "amount",
+          "base": -53.41,
+          "head": 53.41
+        },
+        {
+          "key": "T0092",
+          "column": "amount",
+          "base": -8.27,
+          "head": 8.27
+        },
+        {
+          "key": "T0094",
+          "column": "amount",
+          "base": -6.91,
+          "head": 6.91
+        },
+        {
+          "key": "T0096",
+          "column": "amount",
+          "base": -25.62,
+          "head": 25.62
+        },
+        {
+          "key": "T0098",
+          "column": "amount",
+          "base": -101.68,
+          "head": 101.68
+        },
+        {
+          "key": "T0108",
+          "column": "amount",
+          "base": -47.87,
+          "head": 47.87
+        },
+        {
+          "key": "T0109",
+          "column": "amount",
+          "base": -90.04,
+          "head": 90.04
+        },
+        {
+          "key": "T0110",
+          "column": "amount",
+          "base": -102.6,
+          "head": 102.6
+        },
+        {
+          "key": "T0119",
+          "column": "amount",
+          "base": -64.36,
+          "head": 64.36
+        },
+        {
+          "key": "T0124",
+          "column": "amount",
+          "base": -42.52,
+          "head": 42.52
+        },
+        {
+          "key": "T0130",
+          "column": "amount",
+          "base": -54.75,
+          "head": 54.75
+        },
+        {
+          "key": "T0133",
+          "column": "amount",
+          "base": -84.25,
+          "head": 84.25
+        },
+        {
+          "key": "T0135",
+          "column": "amount",
+          "base": -90.45,
+          "head": 90.45
+        },
+        {
+          "key": "T0137",
+          "column": "amount",
+          "base": -104.68,
+          "head": 104.68
+        },
+        {
+          "key": "T0144",
+          "column": "amount",
+          "base": -50.97,
+          "head": 50.97
+        },
+        {
+          "key": "T0145",
+          "column": "amount",
+          "base": -85.69,
+          "head": 85.69
+        }
+      ],
+      "numeric_delta": {
+        "amount": 4179.72
+      }
+    },
+    {
+      "table": "daily_revenue",
+      "key": "txn_date",
+      "rows_base": 14,
+      "rows_head": 14,
+      "rows_changed": 13,
+      "only_in_base": 0,
+      "only_in_head": 0,
+      "diffs": [
+        {
+          "key": "2026-08-01",
+          "column": "net_revenue",
+          "base": 1128.01,
+          "head": 1359.33
+        },
+        {
+          "key": "2026-08-02",
+          "column": "net_revenue",
+          "base": 1294.9,
+          "head": 1490.24
+        },
+        {
+          "key": "2026-08-03",
+          "column": "net_revenue",
+          "base": 545.25,
+          "head": 1106.15
+        },
+        {
+          "key": "2026-08-04",
+          "column": "net_revenue",
+          "base": 471.12,
+          "head": 577.94
+        },
+        {
+          "key": "2026-08-05",
+          "column": "net_revenue",
+          "base": 703.64,
+          "head": 1046.76
+        },
+        {
+          "key": "2026-08-06",
+          "column": "net_revenue",
+          "base": 1452.35,
+          "head": 1659.75
+        },
+        {
+          "key": "2026-08-07",
+          "column": "net_revenue",
+          "base": 929.14,
+          "head": 1111.08
+        },
+        {
+          "key": "2026-08-08",
+          "column": "net_revenue",
+          "base": 910.36,
+          "head": 1063.72
+        },
+        {
+          "key": "2026-08-09",
+          "column": "net_revenue",
+          "base": 900.12,
+          "head": 1618.88
+        },
+        {
+          "key": "2026-08-10",
+          "column": "net_revenue",
+          "base": 372.75,
+          "head": 923.81
+        },
+        {
+          "key": "2026-08-11",
+          "column": "net_revenue",
+          "base": 2859.95,
+          "head": 3282.51
+        },
+        {
+          "key": "2026-08-12",
+          "column": "net_revenue",
+          "base": -135.29,
+          "head": 135.29
+        },
+        {
+          "key": "2026-08-13",
+          "column": "net_revenue",
+          "base": 1082.96,
+          "head": 1319.52
+        }
+      ],
+      "numeric_delta": {
+        "net_revenue": 4179.72
+      }
+    }
+  ],
+  "databricks": {
+    "backend": "databricks",
+    "schema": "workspace.ripple",
+    "run_id": "main..demo/abs-normalize@20260906T083720Z",
+    "warehouse_id": "c9a0bd38022ced72",
+    "statement_ids": {
+      "row_diff": "01f1a9ce-49d6-1088-aafe-9c82b445749b",
+      "agg_diff": "01f1a9ce-4fc8-1af7-8a29-89665092b574",
+      "summary": "01f1a9ce-51b2-1b10-b29a-a504af7d5fa5"
+    },
+    "sql": {
+      "row_diff": "SELECT b.txn_id, b.kind, b.amount AS base_amount, h.amount AS head_amount,\n       ROUND(h.amount - b.amount, 2) AS delta\nFROM workspace.ripple.clean_transactions b\nJOIN workspace.ripple.clean_transactions h\n  ON b.txn_id = h.txn_id AND b.run_id = h.run_id\nWHERE b.run_id = 'main..demo/abs-normalize@20260906T083720Z' AND b.version = 'base' AND h.version = 'head'\n  AND NOT (b.amount <=> h.amount)\nORDER BY b.txn_id",
+      "agg_diff": "SELECT b.txn_date, b.net_revenue AS base_net_revenue, h.net_revenue AS head_net_revenue,\n       ROUND(h.net_revenue - b.net_revenue, 2) AS delta\nFROM workspace.ripple.daily_revenue b\nJOIN workspace.ripple.daily_revenue h\n  ON b.txn_date = h.txn_date AND b.run_id = h.run_id\nWHERE b.run_id = 'main..demo/abs-normalize@20260906T083720Z' AND b.version = 'base' AND h.version = 'head'\n  AND NOT (b.net_revenue <=> h.net_revenue)\nORDER BY b.txn_date",
+      "summary": "SELECT\n  (SELECT COUNT(*) FROM workspace.ripple.clean_transactions WHERE run_id = 'main..demo/abs-normalize@20260906T083720Z' AND version = 'base') AS rows_base,\n  (SELECT COUNT(*) FROM workspace.ripple.clean_transactions WHERE run_id = 'main..demo/abs-normalize@20260906T083720Z' AND version = 'head') AS rows_head,\n  (SELECT ROUND(SUM(net_revenue), 2) FROM workspace.ripple.daily_revenue WHERE run_id = 'main..demo/abs-normalize@20260906T083720Z' AND version = 'base') AS total_base,\n  (SELECT ROUND(SUM(net_revenue), 2) FROM workspace.ripple.daily_revenue WHERE run_id = 'main..demo/abs-normalize@20260906T083720Z' AND version = 'head') AS total_head"
+    },
+    "row_diff": {
+      "columns": [
+        "txn_id",
+        "kind",
+        "base_amount",
+        "head_amount",
+        "delta"
+      ],
+      "rows": [
+        [
+          "T0001",
+          "refund",
+          "-62.79",
+          "62.79",
+          "125.58"
+        ],
+        [
+          "T0010",
+          "refund",
+          "-66.88",
+          "66.88",
+          "133.76"
+        ],
+        [
+          "T0011",
+          "refund",
+          "-79.15",
+          "79.15",
+          "158.3"
+        ],
+        [
+          "T0025",
+          "refund",
+          "-80.4",
+          "80.4",
+          "160.8"
+        ],
+        [
+          "T0027",
+          "refund",
+          "-60.84",
+          "60.84",
+          "121.68"
+        ],
+        [
+          "T0033",
+          "refund",
+          "-90.97",
+          "90.97",
+          "181.94"
+        ],
+        [
+          "T0038",
+          "refund",
+          "-41.05",
+          "41.05",
+          "82.1"
+        ],
+        [
+          "T0050",
+          "refund",
+          "-76.68",
+          "76.68",
+          "153.36"
+        ],
+        [
+          "T0051",
+          "refund",
+          "-86.75",
+          "86.75",
+          "173.5"
+        ],
+        [
+          "T0052",
+          "refund",
+          "-79.43",
+          "79.43",
+          "158.86"
+        ],
+        [
+          "T0055",
+          "refund",
+          "-65.94",
+          "65.94",
+          "131.88"
+        ],
+        [
+          "T0067",
+          "refund",
+          "-87.34",
+          "87.34",
+          "174.68"
+        ],
+        [
+          "T0070",
+          "refund",
+          "-55.15",
+          "55.15",
+          "110.3"
+        ],
+        [
+          "T0074",
+          "refund",
+          "-52.34",
+          "52.34",
+          "104.68"
+        ],
+        [
+          "T0076",
+          "refund",
+          "-19.15",
+          "19.15",
+          "38.3"
+        ],
+        [
+          "T0079",
+          "refund",
+          "-51.48",
+          "51.48",
+          "102.96"
+        ],
+        [
+          "T0088",
+          "refund",
+          "-19.45",
+          "19.45",
+          "38.9"
+        ],
+        [
+          "T0091",
+          "refund",
+          "-53.41",
+          "53.41",
+          "106.82"
+        ],
+        [
+          "T0092",
+          "refund",
+          "-8.27",
+          "8.27",
+          "16.54"
+        ],
+        [
+          "T0094",
+          "refund",
+          "-6.91",
+          "6.91",
+          "13.82"
+        ],
+        [
+          "T0096",
+          "refund",
+          "-25.62",
+          "25.62",
+          "51.24"
+        ],
+        [
+          "T0098",
+          "refund",
+          "-101.68",
+          "101.68",
+          "203.36"
+        ],
+        [
+          "T0108",
+          "refund",
+          "-47.87",
+          "47.87",
+          "95.74"
+        ],
+        [
+          "T0109",
+          "refund",
+          "-90.04",
+          "90.04",
+          "180.08"
+        ],
+        [
+          "T0110",
+          "refund",
+          "-102.6",
+          "102.6",
+          "205.2"
+        ],
+        [
+          "T0119",
+          "refund",
+          "-64.36",
+          "64.36",
+          "128.72"
+        ],
+        [
+          "T0124",
+          "refund",
+          "-42.52",
+          "42.52",
+          "85.04"
+        ],
+        [
+          "T0130",
+          "refund",
+          "-54.75",
+          "54.75",
+          "109.5"
+        ],
+        [
+          "T0133",
+          "refund",
+          "-84.25",
+          "84.25",
+          "168.5"
+        ],
+        [
+          "T0135",
+          "refund",
+          "-90.45",
+          "90.45",
+          "180.9"
+        ],
+        [
+          "T0137",
+          "refund",
+          "-104.68",
+          "104.68",
+          "209.36"
+        ],
+        [
+          "T0144",
+          "refund",
+          "-50.97",
+          "50.97",
+          "101.94"
+        ],
+        [
+          "T0145",
+          "refund",
+          "-85.69",
+          "85.69",
+          "171.38"
+        ]
+      ]
+    },
+    "agg_diff": {
+      "columns": [
+        "txn_date",
+        "base_net_revenue",
+        "head_net_revenue",
+        "delta"
+      ],
+      "rows": [
+        [
+          "2026-08-01",
+          "1128.01",
+          "1359.33",
+          "231.32"
+        ],
+        [
+          "2026-08-02",
+          "1294.9",
+          "1490.24",
+          "195.34"
+        ],
+        [
+          "2026-08-03",
+          "545.25",
+          "1106.15",
+          "560.9"
+        ],
+        [
+          "2026-08-04",
+          "471.12",
+          "577.94",
+          "106.82"
+        ],
+        [
+          "2026-08-05",
+          "703.64",
+          "1046.76",
+          "343.12"
+        ],
+        [
+          "2026-08-06",
+          "1452.35",
+          "1659.75",
+          "207.4"
+        ],
+        [
+          "2026-08-07",
+          "929.14",
+          "1111.08",
+          "181.94"
+        ],
+        [
+          "2026-08-08",
+          "910.36",
+          "1063.72",
+          "153.36"
+        ],
+        [
+          "2026-08-09",
+          "900.12",
+          "1618.88",
+          "718.76"
+        ],
+        [
+          "2026-08-10",
+          "372.75",
+          "923.81",
+          "551.06"
+        ],
+        [
+          "2026-08-11",
+          "2859.95",
+          "3282.51",
+          "422.56"
+        ],
+        [
+          "2026-08-12",
+          "-135.29",
+          "135.29",
+          "270.58"
+        ],
+        [
+          "2026-08-13",
+          "1082.96",
+          "1319.52",
+          "236.56"
+        ]
+      ]
+    },
+    "summary": {
+      "rows_base": "150",
+      "rows_head": "150",
+      "total_base": "13854.1",
+      "total_head": "18033.82"
+    }
+  },
+  "graph_warnings": [
+    {
+      "code": "W_WORKTREE_SNAPSHOT",
+      "severity": "warning",
+      "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+    }
+  ],
+  "verdict": "BLOCK: downstream data changed meaning; review against the stated intent",
+  "notes": []
+}
