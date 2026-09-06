@@ -1,0 +1,39 @@
+{
+  "cli_version": "0.10.5",
+  "checkpoint_id": "01M1TYYB3Y2QA3NY7Y5FXFQFM4",
+  "session_id": "7b3ac544-571d-408c-b6cf-9eae7d3e2e19",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-06T08:56:45.817592Z",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "BUILDATHON.md",
+    "evidence/graph/diff_checkpoint2_vs_final.json",
+    "progress.md"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-fable-5-1",
+  "turn_id": "24e133666dd4",
+  "checkpoint_transcript_start": 172,
+  "transcript_lines_at_start": 172,
+  "compact_transcript_start": 33,
+  "token_usage": {
+    "input_tokens": 64,
+    "cache_creation_tokens": 3623,
+    "cache_read_tokens": 264351,
+    "output_tokens": 2481,
+    "api_call_count": 2
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-06T08:56:45.783336Z",
+    "agent_lines": 2628,
+    "agent_removed": 2,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 2628,
+    "total_lines_changed": 2630,
+    "agent_percentage": 100,
+    "metric_version": 2
+  }
+}
