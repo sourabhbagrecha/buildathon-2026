@@ -7,8 +7,12 @@ from dataclasses import asdict, dataclass, field
 
 from ripple.compare import TableDiff
 from ripple.config import Mapping
-from ripple.graph import Caller, ChangedSymbol, DiffResult, ImpactResult
+from ripple.graph import ANALYSIS_COMPLETE, ANALYSIS_PARTIAL, Caller, ChangedSymbol, DiffResult, ImpactResult
 from ripple.intent import Intent
+
+PASS = "PASS"
+BLOCK = "BLOCK"
+NEEDS_VERIFICATION = "NEEDS-VERIFICATION"
 
 
 @dataclass
@@ -25,6 +29,14 @@ class ReviewCard:
     graph_warnings: list[dict] = field(default_factory=list)
     verdict: str = ""
     notes: list[str] = field(default_factory=list)
+    # Curveball: tri-state analysis state. "complete" only when every relationship that
+    # led to the verdict is confirmed; "partial" when the graph (or Ripple's own dynamic-
+    # reference scan) says callers may be missing. Partial analysis never yields PASS on
+    # graph evidence alone; the configured entry points are executed as the fallback.
+    analysis: str = ANALYSIS_COMPLETE
+    partial_reasons: list[str] = field(default_factory=list)
+    fallback_entry_points: list[str] = field(default_factory=list)
+    executed_entry_points: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         d = asdict(self)
@@ -37,13 +49,37 @@ class ReviewCard:
 
 
 def decide(card: ReviewCard) -> str:
-    """BLOCK if any output table changed and the intent is contradicted, PASS if nothing changed."""
+    """Verdict.
+
+    BLOCK               an output table changed for the same input snapshot.
+    PASS                execution of every relevant entry point produced identical outputs, or
+                        the graph analysis is complete and reaches no configured entry point.
+    NEEDS-VERIFICATION  analysis is partial and no execution backed the claim; the graph
+                        alone is never enough for PASS in that state.
+    """
     changed = any(t.rows_changed or t.only_in_base or t.only_in_head for t in card.local_diffs)
     if card.databricks and card.databricks.get("row_diff"):
         changed = changed or bool(card.databricks["row_diff"]["rows"])
-    if not changed:
-        return "PASS: outputs identical for base and head over the snapshot"
-    return "BLOCK: downstream data changed meaning; review against the stated intent"
+    if changed:
+        return f"{BLOCK}: downstream data changed meaning; review against the stated intent"
+    executed = bool(card.local_diffs) or bool(card.databricks)
+    if card.analysis == ANALYSIS_PARTIAL:
+        if executed:
+            return (f"{PASS}: outputs identical for base and head over the snapshot "
+                    f"(verified by execution; graph analysis partial, see banner)")
+        return (f"{NEEDS_VERIFICATION}: graph analysis is partial and no entry point was executed; "
+                f"run the configured entry points before trusting this change")
+    if executed:
+        return f"{PASS}: outputs identical for base and head over the snapshot"
+    return f"{PASS}: no configured entry point reachable from the change (graph analysis complete, all relations confirmed)"
+
+
+def _evidence_summary(card: ReviewCard) -> dict[str, int]:
+    counts = {"confirmed": 0, "heuristic": 0, "needs-verification": 0}
+    for imp in card.impacts:
+        for c in imp.callers:
+            counts[c.evidence] = counts.get(c.evidence, 0) + 1
+    return counts
 
 
 def render_markdown(card: ReviewCard) -> str:
@@ -51,6 +87,20 @@ def render_markdown(card: ReviewCard) -> str:
     L.append(f"# Ripple review card: `{card.base}` -> `{card.head}`")
     L.append("")
     L.append(f"**Verdict:** {card.verdict}")
+    L.append("")
+    if card.analysis == ANALYSIS_PARTIAL:
+        L.append("> **PARTIAL ANALYSIS.** The call graph may be missing callers of the changed code")
+        L.append("> (dynamic dispatch, reflection, generated code, or a degraded graph run).")
+        L.append("> Graph relationships below are labelled per edge; nothing here is PASS on graph evidence alone.")
+        for r in card.partial_reasons:
+            L.append(f"> - {r}")
+        if card.fallback_entry_points:
+            L.append(f"> - Fallback: executed configured entry point(s) {', '.join('`' + e + '`' for e in card.fallback_entry_points)} "
+                     f"even though the graph did not reach them.")
+        L.append("")
+    ev = _evidence_summary(card)
+    L.append(f"**Evidence:** analysis `{card.analysis}`; graph relations: {ev['confirmed']} confirmed, "
+             f"{ev['heuristic']} heuristic, {ev['needs-verification']} needs-verification")
     L.append("")
     L.append("## 1. Original requirement (intent)")
     if card.intent.source == "none":
@@ -66,14 +116,26 @@ def render_markdown(card: ReviewCard) -> str:
     if not card.changed:
         L.append("- No entity-level changes reported by `entire graph diff`.")
     for c in card.changed:
+        if not c.is_code:
+            continue
         L.append(f"- Changed {c.kind} `{c.name}` in `{c.file_path}:{c.line}` ({c.change_type}, "
                  f"graph dependents: {c.dependents_count})")
+    non_code = [c for c in card.changed if not c.is_code]
+    if non_code:
+        L.append(f"- {len(non_code)} non-code entity change(s) in "
+                 f"{', '.join('`' + f + '`' for f in sorted({c.file_path for c in non_code}))} (not impact-analysed)")
     for imp in card.impacts:
-        L.append(f"- Impact of `{imp.symbol}` (completeness: {imp.completeness_level}):")
+        L.append(f"- Impact of `{imp.symbol}` (graph completeness: {imp.completeness_level}; analysis: {imp.analysis}):")
+        if not imp.callers:
+            L.append("  - graph reports no callers"
+                     + (" **but analysis is partial: absence of callers is not evidence of safety**" if imp.is_partial else ""))
         for cl in imp.callers:
             via = f" via `{cl.via}`" if cl.via else ""
             L.append(f"  - depth {cl.depth}: `{cl.name}` in `{cl.file_path}:{cl.start_line}`{via}, "
-                     f"call site line {cl.call_site_line} [CALLS, entire-graph]")
+                     f"call site line {cl.call_site_line} [{cl.relation}, entire-graph] **{cl.evidence}** ({cl.evidence_reason})")
+        for ref in imp.dynamic_references:
+            L.append(f"  - dynamic reference `{ref.file_path}:{ref.line}` `{ref.text}` [{ref.reason}, ripple-scan] "
+                     f"**needs-verification**")
     if card.graph_warnings:
         L.append("- Graph warnings:")
         for w in card.graph_warnings:
@@ -81,9 +143,12 @@ def render_markdown(card: ReviewCard) -> str:
     L.append("")
     L.append("## 3. Affected data products (source = configured, ripple.toml)")
     if not card.reached_entry_points:
-        L.append("- No configured entry point is reachable from the changed symbols.")
+        L.append("- No configured entry point is reachable from the changed symbols according to the graph"
+                 + (" (analysis partial: executed as fallback)." if card.fallback_entry_points else "."))
     for m in card.mappings:
-        L.append(f"- Entry point `{m.entry_point}` -> job `{m.databricks_job}`")
+        how = ("fallback (graph did not reach it)" if m.entry_point in card.fallback_entry_points
+               else "reached: " + ", ".join(sorted({c.evidence for c in card.reached_entry_points if c.name == m.entry_symbol}) or ["configured"]))
+        L.append(f"- Entry point `{m.entry_point}` -> job `{m.databricks_job}` [{how}]")
         L.append(f"  - Input: `{m.input_table}`; outputs: {', '.join('`' + t + '`' for t in m.output_tables)}")
         L.append(f"  - Data products: {', '.join(m.data_products)}")
     L.append("")

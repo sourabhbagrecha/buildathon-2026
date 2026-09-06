@@ -18,20 +18,10 @@ STEP_REGISTRY = {
 
 def normalize_amount(amount: float, kind: str) -> float:
     magnitude = round(float(amount), 2)
-    sign = -1 if kind == "refund" else 1
-    return sign * magnitude
-    # "Normalize" amounts: always non-negative.
-    return abs(round(float(amount), 2))
-
-    Purchases are positive, refunds are negative. The raw feed stores the
-    magnitude only, so the sign is derived from ``kind``.
-    Documented intent: refunds must remain negative.
-    """
-    # Normalize transaction amounts: coerce to a clean non-negative magnitude.
-    magnitude = round(abs(float(amount)), 2)
     if kind == "refund":
-        return abs(-magnitude)
+        return -magnitude
     return magnitude
+
 
 def apply_step(step: str, *args):
     """Resolve a step by name at runtime (reflection: invisible to the static graph)."""
