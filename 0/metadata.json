@@ -1,0 +1,78 @@
+{
+  "cli_version": "0.10.5",
+  "checkpoint_id": "01M1V15AHZ82NM8827KD5PXRP0",
+  "session_id": "fcf357b0-9564-442e-9cfa-747af5d3fb66",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-06T09:35:31.496881Z",
+  "branch": "ripple-next",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "BUILDATHON.md",
+    "evidence/graph/diff_checkpoint4_vs_next.json",
+    "progress.md"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-fable-5-1",
+  "turn_id": "9efa8bd88b40",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 1226,
+    "cache_creation_tokens": 163838,
+    "cache_read_tokens": 5552108,
+    "output_tokens": 66129,
+    "api_call_count": 43
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-06T09:35:31.43651Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 1802,
+    "human_modified": 13,
+    "human_removed": 0,
+    "total_committed": 1802,
+    "total_lines_changed": 1815,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 2556,
+      "user_lines_removed": 121,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "BUILDATHON.md": 30,
+        "evidence/databricks/jobs/ripple_exec_268c4ec..demo_abs-normalize_20260906T092954Z.py": 42,
+        "evidence/databricks/last_run.json": 19,
+        "evidence/review_card_demo_databricks_job.json": 875,
+        "evidence/review_card_demo_databricks_job.md": 66,
+        "evidence/ripple_overview.html": 667,
+        "pipeline/transactions.py": 16,
+        "progress.md": 8,
+        "ripple.toml": 7,
+        "ripple/card.py": 48,
+        "ripple/cli.py": 72,
+        "ripple/config.py": 10,
+        "ripple/databricks_backend.py": 80,
+        "ripple/databricks_job.py": 164,
+        "ripple/graph.py": 169,
+        "ripple/worktree.py": 63,
+        "tests/fixtures/cross_file/runner.py": 8,
+        "tests/fixtures/cross_file/steps.yaml": 4,
+        "tests/test_next.py": 208
+      },
+      "user_removed_per_file": {
+        "BUILDATHON.md": 13,
+        "evidence/databricks/last_run.json": 7,
+        "pipeline/transactions.py": 27,
+        "ripple.toml": 1,
+        "ripple/card.py": 2,
+        "ripple/cli.py": 26,
+        "ripple/config.py": 1,
+        "ripple/databricks_backend.py": 9,
+        "ripple/graph.py": 35
+      }
+    }
+  ]
+}
