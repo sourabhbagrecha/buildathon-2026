@@ -1,0 +1,29 @@
+{
+  "cli_version": "0.10.5",
+  "checkpoint_id": "01M1TYNKYCJ6J9Q8F61923ZHMT",
+  "strategy": "manual-commit",
+  "branch": "demo/dynamic-dispatch-safe",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "pipeline/transactions.py",
+    "ripple/card.py",
+    "ripple/cli.py",
+    "ripple/graph.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 64,
+    "cache_creation_tokens": 7169,
+    "cache_read_tokens": 209459,
+    "output_tokens": 3848,
+    "api_call_count": 2
+  }
+}
