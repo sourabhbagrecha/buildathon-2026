@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.10.5",
+  "checkpoint_id": "01M1TYKBDYWFTGN1QXDDERHT98",
+  "session_id": "7b3ac544-571d-408c-b6cf-9eae7d3e2e19",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-06T08:50:45.6493Z",
+  "branch": "demo/dynamic-dispatch",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "pipeline/transactions.py"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-fable-5-1",
+  "turn_id": "24e133666dd4",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 354,
+    "cache_creation_tokens": 68722,
+    "cache_read_tokens": 789216,
+    "output_tokens": 29295,
+    "api_call_count": 12
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-06T08:50:45.624333Z",
+    "agent_lines": 21,
+    "agent_removed": 19,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 21,
+    "total_lines_changed": 40,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
