@@ -1,0 +1,146 @@
+{
+  "base": "demo/dynamic-dispatch",
+  "head": "demo/dynamic-dispatch-safe",
+  "intent": {
+    "requirement": "Refunds must remain negative. `normalize_amount` derives the sign of an amount from the transaction kind: purchases positive, refunds negative. Daily net revenue (`daily_revenue`) is `sum(amount)` per day and is only correct if this holds.",
+    "intent_file": "pipeline/INTENT.md",
+    "checkpoint_id": "01M1TVFK5MAS7B1JFN41QA2JQ8",
+    "checkpoint_snippet": null,
+    "source": "intent-file"
+  },
+  "changed": [
+    {
+      "name": "normalize_amount",
+      "kind": "function",
+      "file_path": "pipeline/transactions.py",
+      "change_type": "body_changed",
+      "dependents_count": 13,
+      "line": 19,
+      "language": "Python"
+    }
+  ],
+  "impacts": [
+    {
+      "symbol": "normalize_amount",
+      "callers": [
+        {
+          "name": "test_refund_is_negative",
+          "file_path": "tests/test_pipeline.py",
+          "start_line": 13,
+          "depth": 1,
+          "via": null,
+          "call_site_line": 14,
+          "relation": "CALLS",
+          "evidence": "confirmed",
+          "evidence_reason": "CALLS edge with call site tests/test_pipeline.py:14"
+        },
+        {
+          "name": "test_purchase_is_positive",
+          "file_path": "tests/test_pipeline.py",
+          "start_line": 16,
+          "depth": 1,
+          "via": null,
+          "call_site_line": 17,
+          "relation": "CALLS",
+          "evidence": "confirmed",
+          "evidence_reason": "CALLS edge with call site tests/test_pipeline.py:17"
+        }
+      ],
+      "warnings": [
+        {
+          "code": "W_WORKTREE_SNAPSHOT",
+          "severity": "warning",
+          "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+        }
+      ],
+      "partial_failures": [],
+      "completeness_level": "ok",
+      "analysis": "partial",
+      "partial_reasons": [
+        "dynamic reference to `normalize_amount` at pipeline/transactions.py:13 (symbol name used as a string literal); the graph cannot resolve this path",
+        "dynamic reference to `normalize_amount` at pipeline/transactions.py:26 (reflection/dynamic dispatch via globals()); the graph cannot resolve this path"
+      ],
+      "dynamic_references": [
+        {
+          "file_path": "pipeline/transactions.py",
+          "line": 13,
+          "text": "\"normalize\": \"normalize_amount\",",
+          "reason": "symbol name used as a string literal"
+        },
+        {
+          "file_path": "pipeline/transactions.py",
+          "line": 26,
+          "text": "fn = globals()[STEP_REGISTRY[step]]",
+          "reason": "reflection/dynamic dispatch via globals()"
+        }
+      ]
+    }
+  ],
+  "reached_entry_points": [],
+  "mappings": [
+    {
+      "source": "configured",
+      "entry_point": "pipeline.transactions:run",
+      "entry_file": "pipeline/transactions.py",
+      "databricks_job": "ripple_transactions_job",
+      "databricks_warehouse_id": "c9a0bd38022ced72",
+      "input_table": "workspace.ripple.raw_transactions",
+      "output_tables": [
+        "workspace.ripple.clean_transactions",
+        "workspace.ripple.daily_revenue"
+      ],
+      "data_products": [
+        "Daily Revenue dashboard",
+        "Finance month-end close extract"
+      ],
+      "intent_file": "pipeline/INTENT.md",
+      "intent_checkpoint": "01M1TVFK5MAS7B1JFN41QA2JQ8",
+      "intent_query": "refunds negative"
+    }
+  ],
+  "local_diffs": [
+    {
+      "table": "clean_transactions",
+      "key": "txn_id",
+      "rows_base": 150,
+      "rows_head": 150,
+      "rows_changed": 0,
+      "only_in_base": 0,
+      "only_in_head": 0,
+      "diffs": [],
+      "numeric_delta": {}
+    },
+    {
+      "table": "daily_revenue",
+      "key": "txn_date",
+      "rows_base": 14,
+      "rows_head": 14,
+      "rows_changed": 0,
+      "only_in_base": 0,
+      "only_in_head": 0,
+      "diffs": [],
+      "numeric_delta": {}
+    }
+  ],
+  "databricks": null,
+  "graph_warnings": [
+    {
+      "code": "W_WORKTREE_SNAPSHOT",
+      "severity": "warning",
+      "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+    }
+  ],
+  "verdict": "PASS: outputs identical for base and head over the snapshot (verified by execution; graph analysis partial, see banner)",
+  "notes": [],
+  "analysis": "partial",
+  "partial_reasons": [
+    "normalize_amount: dynamic reference to `normalize_amount` at pipeline/transactions.py:13 (symbol name used as a string literal); the graph cannot resolve this path",
+    "normalize_amount: dynamic reference to `normalize_amount` at pipeline/transactions.py:26 (reflection/dynamic dispatch via globals()); the graph cannot resolve this path"
+  ],
+  "fallback_entry_points": [
+    "pipeline.transactions:run"
+  ],
+  "executed_entry_points": [
+    "pipeline.transactions:run"
+  ]
+}
