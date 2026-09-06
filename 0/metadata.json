@@ -1,0 +1,60 @@
+{
+  "cli_version": "0.10.5",
+  "checkpoint_id": "01M1TYWW6PB644YRN2KZXMKCP3",
+  "session_id": "7b3ac544-571d-408c-b6cf-9eae7d3e2e19",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-06T08:55:57.780434Z",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "BUILDATHON.md",
+    "evidence/databricks/dynamic_run.json",
+    "evidence/graph/impact_normalize_amount_dynamic.json",
+    "evidence/review_card_dynamic.json",
+    "evidence/review_card_dynamic.md",
+    "evidence/review_card_dynamic_safe.json",
+    "evidence/review_card_dynamic_safe.md",
+    "progress.md",
+    "ripple/card.py",
+    "ripple/cli.py",
+    "ripple/graph.py",
+    "tests/fixtures/graph_impact_degraded.json",
+    "tests/fixtures/graph_impact_dynamic.json",
+    "tests/fixtures/transactions_dynamic_dispatch.py",
+    "tests/test_curveball.py"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-fable-5-1",
+  "turn_id": "24e133666dd4",
+  "checkpoint_transcript_start": 152,
+  "transcript_lines_at_start": 152,
+  "compact_transcript_start": 27,
+  "token_usage": {
+    "input_tokens": 96,
+    "cache_creation_tokens": 11979,
+    "cache_read_tokens": 369029,
+    "output_tokens": 9325,
+    "api_call_count": 3
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-06T08:55:57.744708Z",
+    "agent_lines": 2149,
+    "agent_removed": 37,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 2149,
+    "total_lines_changed": 2186,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

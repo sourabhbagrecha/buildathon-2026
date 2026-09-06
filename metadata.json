@@ -1,0 +1,40 @@
+{
+  "cli_version": "0.10.5",
+  "checkpoint_id": "01M1TYWW6PB644YRN2KZXMKCP3",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "BUILDATHON.md",
+    "evidence/databricks/dynamic_run.json",
+    "evidence/graph/impact_normalize_amount_dynamic.json",
+    "evidence/review_card_dynamic.json",
+    "evidence/review_card_dynamic.md",
+    "evidence/review_card_dynamic_safe.json",
+    "evidence/review_card_dynamic_safe.md",
+    "progress.md",
+    "ripple/card.py",
+    "ripple/cli.py",
+    "ripple/graph.py",
+    "tests/fixtures/graph_impact_degraded.json",
+    "tests/fixtures/graph_impact_dynamic.json",
+    "tests/fixtures/transactions_dynamic_dispatch.py",
+    "tests/test_curveball.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 96,
+    "cache_creation_tokens": 11979,
+    "cache_read_tokens": 369029,
+    "output_tokens": 9325,
+    "api_call_count": 3
+  }
+}
