@@ -1,0 +1,76 @@
+{
+  "cli_version": "0.10.5",
+  "checkpoint_id": "01M1TY0G8KHGFN783A6VVB00QR",
+  "session_id": "748deed5-e4c6-43cc-b437-0825d46be6dd",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-06T08:40:27.660324Z",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "BUILDATHON.md",
+    "evidence/databricks/last_run.json",
+    "evidence/graph/diff_main_vs_demo.json",
+    "evidence/graph/impact_normalize_amount.json",
+    "evidence/graph/search_normalize_amount.txt",
+    "evidence/review_card_demo.json",
+    "evidence/review_card_demo.md",
+    "progress.md",
+    "ripple/__init__.py",
+    "ripple/__main__.py",
+    "ripple/card.py",
+    "ripple/cli.py",
+    "ripple/compare.py",
+    "ripple/config.py",
+    "ripple/databricks_backend.py",
+    "ripple/execute.py",
+    "ripple/graph.py",
+    "ripple/intent.py",
+    "tests/__init__.py",
+    "tests/fixtures/graph_diff_resolved.json",
+    "tests/fixtures/graph_impact_resolved.json",
+    "tests/fixtures/transactions_abs_regression.py",
+    "tests/test_card.py",
+    "tests/test_compare.py",
+    "tests/test_databricks_sql.py",
+    "tests/test_graph.py",
+    "tests/test_pipeline.py"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-fable-5-1",
+  "turn_id": "ae4f29b19ca1",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 450,
+    "cache_creation_tokens": 79239,
+    "cache_read_tokens": 1112434,
+    "output_tokens": 26757,
+    "api_call_count": 15
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-06T08:40:27.629686Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 2182,
+    "human_modified": 4,
+    "human_removed": 0,
+    "total_committed": 2182,
+    "total_lines_changed": 2186,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 27,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "evidence/graph/diff_main_vs_demo.json": 21,
+        "evidence/graph/impact_normalize_amount.json": 1,
+        "evidence/graph/search_normalize_amount.txt": 1,
+        "progress.md": 4
+      }
+    }
+  ]
+}
