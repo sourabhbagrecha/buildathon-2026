@@ -71,8 +71,8 @@ Response (fresh session B, reconstructed from checkpoint `01M1TY0G8KHGFN783A6VVB
 ## Checkpoint links and what each checkpoint proves
 1. Initial understanding and intended architecture: this commit.
 2. Last stable state before the Curveball: commit 97e3307, Entire checkpoint `01M1TY0G8KHGFN783A6VVB00QR`. Proves an end-to-end workflow: graph diff -> impact -> configured mapping -> intent -> execute both versions -> Databricks comparison -> review card, with 15 passing tests.
-3. Response to the Curveball: commit and Entire checkpoint recorded in `progress.md` (section "Checkpoint 3"). Proves: tri-state labels, partial-analysis banner, execute-anyway fallback, NEEDS-VERIFICATION verdict, dynamic-dispatch fixture with real graph output, 37 passing tests, live dynamic-dispatch demo cards.
-4. Final implementation and verification: commit and Entire checkpoint recorded in `progress.md` (section "Checkpoint 4"), with the final semantic diff `entire graph diff --base 97e3307 --head <final>` saved as `evidence/graph/diff_checkpoint2_vs_final.json`.
+3. Response to the Curveball: commit 8cf3d61, Entire checkpoint `01M1TYWW6PB644YRN2KZXMKCP3`. Proves: tri-state labels, partial-analysis banner, execute-anyway fallback, NEEDS-VERIFICATION verdict, dynamic-dispatch fixture with real graph output, 37 passing tests, live dynamic-dispatch demo cards.
+4. Final implementation and verification: the commit after 8cf3d61 on branch `ripple` (id recorded in `progress.md`, section "Checkpoint 4"), with the final semantic diff `entire graph diff --base 97e3307 --head 8cf3d61` saved as `evidence/graph/diff_checkpoint2_vs_final.json` (57 Python entity changes: 8 added + 7 changed in `ripple/graph.py`, 3 in `ripple/cli.py`, 4 in `ripple/card.py`, the rest fixture and tests).
 
 ## Setup, run and test instructions
 Requirements: Python 3.11+ (stdlib only, no pip dependencies), `entire` CLI with the graph plugin, `git`. For the Databricks backend: `databricks` CLI authenticated to the demo workspace (profile `DEFAULT`; no secrets in this repo).
