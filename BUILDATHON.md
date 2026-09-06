@@ -52,7 +52,7 @@ Response to be recorded after the fresh session implements it.
 
 ## Checkpoint links and what each checkpoint proves
 1. Initial understanding and intended architecture: this commit.
-2. Last stable state before the Curveball: the commit "Ripple MVP" (checkpoint 2, see progress.md for the id). Proves an end-to-end workflow: graph diff -> impact -> configured mapping -> intent -> execute both versions -> Databricks comparison -> review card, with 15 passing tests.
+2. Last stable state before the Curveball: commit 97e3307, Entire checkpoint `01M1TY0G8KHGFN783A6VVB00QR`. Proves an end-to-end workflow: graph diff -> impact -> configured mapping -> intent -> execute both versions -> Databricks comparison -> review card, with 15 passing tests.
 3. Response to the Curveball: to be added.
 4. Final implementation and verification: to be added.
 
