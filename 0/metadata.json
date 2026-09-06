@@ -1,0 +1,127 @@
+{
+  "cli_version": "0.10.5",
+  "checkpoint_id": "01M1V124D75T56BXPP096FYZF6",
+  "session_id": "63510c8e-df08-468c-8635-8db6db07d688",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-06T09:33:45.624671Z",
+  "branch": "ripple-next",
+  "checkpoints_count": 3,
+  "save_step_count": 3,
+  "files_touched": [
+    "BUILDATHON.md",
+    "evidence/databricks/jobs/ripple_exec_268c4ec..demo_abs-normalize_20260906T092954Z.py",
+    "evidence/databricks/last_run.json",
+    "evidence/review_card_demo_databricks_job.json",
+    "evidence/review_card_demo_databricks_job.md",
+    "pipeline/transactions.py",
+    "ripple.toml",
+    "ripple/card.py",
+    "ripple/cli.py",
+    "ripple/config.py",
+    "ripple/databricks_backend.py",
+    "ripple/graph.py",
+    "ripple/worktree.py",
+    "tests/fixtures/cross_file/runner.py",
+    "tests/fixtures/cross_file/steps.yaml",
+    "tests/test_next.py"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-fable-5-1",
+  "turn_id": "74c1d0463026",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 618,
+    "cache_creation_tokens": 98134,
+    "cache_read_tokens": 2119148,
+    "output_tokens": 42975,
+    "api_call_count": 24
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "claude-skill-toolu_01NrFW7bD6bY8fjfX6Y2cjMR",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "artifact-design"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "74c1d0463026",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 46,
+        "end": 47,
+        "entry_ids": [
+          "caf5536f-c551-48de-ba12-5fffc9c7715d"
+        ],
+        "tool_use_id": "toolu_01NrFW7bD6bY8fjfX6Y2cjMR"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "toolu_01NrFW7bD6bY8fjfX6Y2cjMR"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: artifact-design",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 3
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-06T09:33:45.576412Z",
+    "agent_lines": 1547,
+    "agent_removed": 82,
+    "human_added": 446,
+    "human_modified": 16,
+    "human_removed": 0,
+    "total_committed": 2009,
+    "total_lines_changed": 2091,
+    "agent_percentage": 77.90530846484936,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 963,
+      "user_lines_removed": 12,
+      "agent_lines_added": 248,
+      "agent_lines_removed": 62,
+      "user_added_per_file": {
+        "evidence/ripple_overview.html": 667,
+        "ripple/card.py": 46,
+        "ripple/config.py": 10,
+        "ripple/databricks_backend.py": 80,
+        "ripple/databricks_job.py": 160
+      },
+      "user_removed_per_file": {
+        "ripple/card.py": 2,
+        "ripple/config.py": 1,
+        "ripple/databricks_backend.py": 9
+      }
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 827,
+      "user_lines_removed": 0,
+      "agent_lines_added": 384,
+      "agent_lines_removed": 74,
+      "user_added_per_file": {
+        "evidence/ripple_overview.html": 667,
+        "ripple/databricks_job.py": 160
+      }
+    }
+  ]
+}

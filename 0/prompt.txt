@@ -1,0 +1,37 @@
+Create a presentation for our app, make sure to include the following:
+Whichever track you choose, every submission should aim to demonstrate:
+
+01
+A clearly defined user or stakeholder
+The team should know who the product is for and what that person needs.
+02
+A meaningful problem
+The project should address a real difficulty, opportunity or unmet need rather than adding technology without purpose.
+03
+A focused solution
+The team should choose a scope that can produce a credible result within the event window.
+04
+A working core experience
+Another person should be able to interact with, inspect or meaningfully evaluate the central product idea.
+05
+Transparent implementation
+The submission should identify prior work, templates, external services, AI-generated components and open-source dependencies.
+06
+A practical continuation path
+The team should understand what must happen next if the idea is to become a reliable product.
+
+---
+
+Download it here.
+
+---
+
+<task-notification>
+<task-type>artifact-auto-react</task-type>
+<summary>1 artifact auto-reply subscription paused by the interrupt (comments sent to Claude meanwhile are answered then)</summary>
+The user's interrupt paused it and the watch is kept; when the user asks you to publish this artifact again, that publish resumes it, or resume_replies if the user asks, as does the user's next typed message — each only on hosts that pass typed input through as the user's, and comments sent to Claude in the meantime are answered then; publishing without being asked, while handling a notification or a wake-up, leaves it paused. Do not republish or resume just to re-enable auto-replies unless the user asks.
+</task-notification>
+
+---
+
+Download it as a PPTX
