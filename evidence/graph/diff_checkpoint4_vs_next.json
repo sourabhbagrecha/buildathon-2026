@@ -1,0 +1,1809 @@
+{
+  "base": "281ad72",
+  "head": "b8fcc03",
+  "files": [
+    {
+      "path": "BUILDATHON.md",
+      "status": "M",
+      "language": "Markdown",
+      "changes": [
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "After-the-Curveball:-the-remaining-items-checkpoint-5",
+          "new_signature": "markdown heading After the Curveball: the remaining items (checkpoint 5)",
+          "after_start_line": 71,
+          "dependents_count": 0
+        },
+        {
+          "type": "removed",
+          "kind": "section",
+          "name": "Curveball-demo:-dynamic-dispatch-pipeline.-The-graph-indexes-the-checked-out-tree",
+          "old_signature": "markdown heading Curveball demo: dynamic-dispatch pipeline. The graph indexes the checked-out tree,",
+          "before_start_line": 93,
+          "dependents_count": 0
+        },
+        {
+          "type": "removed",
+          "kind": "section",
+          "name": "so-check-the-dynamic-branch-out-in-a-worktree-and-point---repo-at-it.",
+          "old_signature": "markdown heading so check the dynamic branch out in a worktree and point --repo at it.",
+          "before_start_line": 94,
+          "dependents_count": 0
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "Curveball-demo:-dynamic-dispatch-pipeline.-Ripple-materialises---head-in-a-temporary",
+          "new_signature": "markdown heading Curveball demo: dynamic-dispatch pipeline. Ripple materialises --head in a temporary",
+          "after_start_line": 105,
+          "dependents_count": 0
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "worktree-automatically-so-this-runs-from-the-main-checkout.",
+          "new_signature": "markdown heading worktree automatically, so this runs from the main checkout.",
+          "after_start_line": 106,
+          "dependents_count": 0
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "execute-both-versions-AS-A-DATABRICKS-JOB-serverless-compare-on-Databricks-add-Unity-Catalog-lineage",
+          "new_signature": "markdown heading execute both versions AS A DATABRICKS JOB (serverless), compare on Databricks, add Unity Catalog lineage",
+          "after_start_line": 110,
+          "dependents_count": 0
+        }
+      ]
+    },
+    {
+      "path": "evidence/databricks/jobs/ripple_exec_268c4ec..demo_abs-normalize_20260906T092954Z.py",
+      "status": "A",
+      "language": "Python",
+      "changes": [
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "load",
+          "new_signature": "def load(src, name)",
+          "after_start_line": 16,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "q",
+          "new_signature": "def q(v)",
+          "after_start_line": 22,
+          "dependents_count": 3
+        }
+      ]
+    },
+    {
+      "path": "evidence/databricks/last_run.json",
+      "status": "M",
+      "language": "JSON",
+      "changes": [
+        {
+          "type": "body_changed",
+          "kind": "section",
+          "name": "run_id",
+          "before_start_line": 4,
+          "after_start_line": 4,
+          "dependents_count": 15
+        },
+        {
+          "type": "body_changed",
+          "kind": "section",
+          "name": "row_diff",
+          "before_start_line": 7,
+          "after_start_line": 7,
+          "dependents_count": 3
+        },
+        {
+          "type": "body_changed",
+          "kind": "section",
+          "name": "agg_diff",
+          "before_start_line": 8,
+          "after_start_line": 8,
+          "dependents_count": 2
+        },
+        {
+          "type": "body_changed",
+          "kind": "section",
+          "name": "summary",
+          "before_start_line": 9,
+          "after_start_line": 9,
+          "dependents_count": 3
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "job_run",
+          "new_signature": "json key job_run",
+          "after_start_line": 352,
+          "dependents_count": 5
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "run_name",
+          "new_signature": "json key run_name",
+          "after_start_line": 354,
+          "dependents_count": 3
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "run_page_url",
+          "new_signature": "json key run_page_url",
+          "after_start_line": 355,
+          "dependents_count": 4
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "life_cycle_state",
+          "new_signature": "json key life_cycle_state",
+          "after_start_line": 356,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "result_state",
+          "new_signature": "json key result_state",
+          "after_start_line": 357,
+          "dependents_count": 4
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "state_message",
+          "new_signature": "json key state_message",
+          "after_start_line": 358,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "duration_s",
+          "new_signature": "json key duration_s",
+          "after_start_line": 359,
+          "dependents_count": 4
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "python_file",
+          "new_signature": "json key python_file",
+          "after_start_line": 360,
+          "dependents_count": 8
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "compute",
+          "new_signature": "json key compute",
+          "after_start_line": 361,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "script_local",
+          "new_signature": "json key script_local",
+          "after_start_line": 362,
+          "dependents_count": 2
+        }
+      ]
+    },
+    {
+      "path": "evidence/review_card_demo_databricks_job.json",
+      "status": "A",
+      "language": "JSON",
+      "changes": [
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "base",
+          "new_signature": "json key base",
+          "after_start_line": 2,
+          "dependents_count": 22
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "head",
+          "new_signature": "json key head",
+          "after_start_line": 3,
+          "dependents_count": 28
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "intent",
+          "new_signature": "json key intent",
+          "after_start_line": 4,
+          "dependents_count": 26
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "requirement",
+          "new_signature": "json key requirement",
+          "after_start_line": 5,
+          "dependents_count": 9
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "intent_file",
+          "new_signature": "json key intent_file",
+          "after_start_line": 6,
+          "dependents_count": 6
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "checkpoint_id",
+          "new_signature": "json key checkpoint_id",
+          "after_start_line": 7,
+          "dependents_count": 3
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "checkpoint_snippet",
+          "new_signature": "json key checkpoint_snippet",
+          "after_start_line": 8,
+          "dependents_count": 3
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "source",
+          "new_signature": "json key source",
+          "after_start_line": 9,
+          "dependents_count": 21
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "changed",
+          "new_signature": "json key changed",
+          "after_start_line": 11,
+          "dependents_count": 28
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "name",
+          "new_signature": "json key name",
+          "after_start_line": 13,
+          "dependents_count": 34
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "kind",
+          "new_signature": "json key kind",
+          "after_start_line": 14,
+          "dependents_count": 20
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "file_path",
+          "new_signature": "json key file_path",
+          "after_start_line": 15,
+          "dependents_count": 20
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "change_type",
+          "new_signature": "json key change_type",
+          "after_start_line": 16,
+          "dependents_count": 5
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "dependents_count",
+          "new_signature": "json key dependents_count",
+          "after_start_line": 17,
+          "dependents_count": 3
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "line",
+          "new_signature": "json key line",
+          "after_start_line": 18,
+          "dependents_count": 16
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "language",
+          "new_signature": "json key language",
+          "after_start_line": 19,
+          "dependents_count": 3
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "impacts",
+          "new_signature": "json key impacts",
+          "after_start_line": 22,
+          "dependents_count": 12
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "symbol",
+          "new_signature": "json key symbol",
+          "after_start_line": 24,
+          "dependents_count": 20
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "callers",
+          "new_signature": "json key callers",
+          "after_start_line": 25,
+          "dependents_count": 18
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "start_line",
+          "new_signature": "json key start_line",
+          "after_start_line": 29,
+          "dependents_count": 6
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "depth",
+          "new_signature": "json key depth",
+          "after_start_line": 30,
+          "dependents_count": 6
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "via",
+          "new_signature": "json key via",
+          "after_start_line": 31,
+          "dependents_count": 14
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "call_site_line",
+          "new_signature": "json key call_site_line",
+          "after_start_line": 32,
+          "dependents_count": 5
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "relation",
+          "new_signature": "json key relation",
+          "after_start_line": 33,
+          "dependents_count": 10
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "evidence",
+          "new_signature": "json key evidence",
+          "after_start_line": 34,
+          "dependents_count": 19
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "evidence_reason",
+          "new_signature": "json key evidence_reason",
+          "after_start_line": 35,
+          "dependents_count": 5
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "warnings",
+          "new_signature": "json key warnings",
+          "after_start_line": 71,
+          "dependents_count": 10
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "code",
+          "new_signature": "json key code",
+          "after_start_line": 73,
+          "dependents_count": 12
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "severity",
+          "new_signature": "json key severity",
+          "after_start_line": 74,
+          "dependents_count": 0
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "effect_on_semantic_completeness",
+          "new_signature": "json key effect_on_semantic_completeness",
+          "after_start_line": 75,
+          "dependents_count": 2
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "partial_failures",
+          "new_signature": "json key partial_failures",
+          "after_start_line": 78,
+          "dependents_count": 5
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "completeness_level",
+          "new_signature": "json key completeness_level",
+          "after_start_line": 79,
+          "dependents_count": 10
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "analysis",
+          "new_signature": "json key analysis",
+          "after_start_line": 80,
+          "dependents_count": 27
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "partial_reasons",
+          "new_signature": "json key partial_reasons",
+          "after_start_line": 81,
+          "dependents_count": 18
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "dynamic_references",
+          "new_signature": "json key dynamic_references",
+          "after_start_line": 82,
+          "dependents_count": 3
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "reached_entry_points",
+          "new_signature": "json key reached_entry_points",
+          "after_start_line": 85,
+          "dependents_count": 6
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "mappings",
+          "new_signature": "json key mappings",
+          "after_start_line": 98,
+          "dependents_count": 9
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "entry_point",
+          "new_signature": "json key entry_point",
+          "after_start_line": 101,
+          "dependents_count": 8
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "entry_file",
+          "new_signature": "json key entry_file",
+          "after_start_line": 102,
+          "dependents_count": 6
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "databricks_job",
+          "new_signature": "json key databricks_job",
+          "after_start_line": 103,
+          "dependents_count": 4
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "databricks_warehouse_id",
+          "new_signature": "json key databricks_warehouse_id",
+          "after_start_line": 104,
+          "dependents_count": 3
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "input_table",
+          "new_signature": "json key input_table",
+          "after_start_line": 105,
+          "dependents_count": 4
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "output_tables",
+          "new_signature": "json key output_tables",
+          "after_start_line": 106,
+          "dependents_count": 4
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "data_products",
+          "new_signature": "json key data_products",
+          "after_start_line": 110,
+          "dependents_count": 3
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "intent_checkpoint",
+          "new_signature": "json key intent_checkpoint",
+          "after_start_line": 115,
+          "dependents_count": 3
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "intent_query",
+          "new_signature": "json key intent_query",
+          "after_start_line": 116,
+          "dependents_count": 3
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "local_diffs",
+          "new_signature": "json key local_diffs",
+          "after_start_line": 119,
+          "dependents_count": 9
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "table",
+          "new_signature": "json key table",
+          "after_start_line": 121,
+          "dependents_count": 10
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "key",
+          "new_signature": "json key key",
+          "after_start_line": 122,
+          "dependents_count": 12
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "rows_base",
+          "new_signature": "json key rows_base",
+          "after_start_line": 123,
+          "dependents_count": 3
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "rows_head",
+          "new_signature": "json key rows_head",
+          "after_start_line": 124,
+          "dependents_count": 3
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "rows_changed",
+          "new_signature": "json key rows_changed",
+          "after_start_line": 125,
+          "dependents_count": 10
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "only_in_base",
+          "new_signature": "json key only_in_base",
+          "after_start_line": 126,
+          "dependents_count": 5
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "only_in_head",
+          "new_signature": "json key only_in_head",
+          "after_start_line": 127,
+          "dependents_count": 5
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "diffs",
+          "new_signature": "json key diffs",
+          "after_start_line": 128,
+          "dependents_count": 10
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "column",
+          "new_signature": "json key column",
+          "after_start_line": 131,
+          "dependents_count": 3
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "numeric_delta",
+          "new_signature": "json key numeric_delta",
+          "after_start_line": 328,
+          "dependents_count": 7
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "amount",
+          "new_signature": "json key amount",
+          "after_start_line": 329,
+          "dependents_count": 30
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "net_revenue",
+          "new_signature": "json key net_revenue",
+          "after_start_line": 421,
+          "dependents_count": 7
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "databricks",
+          "new_signature": "json key databricks",
+          "after_start_line": 425,
+          "dependents_count": 24
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "backend",
+          "new_signature": "json key backend",
+          "after_start_line": 426,
+          "dependents_count": 4
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "schema",
+          "new_signature": "json key schema",
+          "after_start_line": 427,
+          "dependents_count": 6
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "run_id",
+          "new_signature": "json key run_id",
+          "after_start_line": 428,
+          "dependents_count": 15
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "warehouse_id",
+          "new_signature": "json key warehouse_id",
+          "after_start_line": 429,
+          "dependents_count": 8
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "statement_ids",
+          "new_signature": "json key statement_ids",
+          "after_start_line": 430,
+          "dependents_count": 2
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "row_diff",
+          "new_signature": "json key row_diff",
+          "after_start_line": 431,
+          "dependents_count": 3
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "agg_diff",
+          "new_signature": "json key agg_diff",
+          "after_start_line": 432,
+          "dependents_count": 2
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "summary",
+          "new_signature": "json key summary",
+          "after_start_line": 433,
+          "dependents_count": 3
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "sql",
+          "new_signature": "json key sql",
+          "after_start_line": 435,
+          "dependents_count": 7
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "columns",
+          "new_signature": "json key columns",
+          "after_start_line": 441,
+          "dependents_count": 5
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "rows",
+          "new_signature": "json key rows",
+          "after_start_line": 448,
+          "dependents_count": 30
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "total_base",
+          "new_signature": "json key total_base",
+          "after_start_line": 773,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "total_head",
+          "new_signature": "json key total_head",
+          "after_start_line": 774,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "job_run",
+          "new_signature": "json key job_run",
+          "after_start_line": 776,
+          "dependents_count": 5
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "run_name",
+          "new_signature": "json key run_name",
+          "after_start_line": 778,
+          "dependents_count": 3
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "run_page_url",
+          "new_signature": "json key run_page_url",
+          "after_start_line": 779,
+          "dependents_count": 4
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "life_cycle_state",
+          "new_signature": "json key life_cycle_state",
+          "after_start_line": 780,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "result_state",
+          "new_signature": "json key result_state",
+          "after_start_line": 781,
+          "dependents_count": 4
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "state_message",
+          "new_signature": "json key state_message",
+          "after_start_line": 782,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "duration_s",
+          "new_signature": "json key duration_s",
+          "after_start_line": 783,
+          "dependents_count": 4
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "python_file",
+          "new_signature": "json key python_file",
+          "after_start_line": 784,
+          "dependents_count": 8
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "compute",
+          "new_signature": "json key compute",
+          "after_start_line": 785,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "script_local",
+          "new_signature": "json key script_local",
+          "after_start_line": 786,
+          "dependents_count": 2
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "graph_warnings",
+          "new_signature": "json key graph_warnings",
+          "after_start_line": 789,
+          "dependents_count": 3
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "verdict",
+          "new_signature": "json key verdict",
+          "after_start_line": 796,
+          "dependents_count": 11
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "notes",
+          "new_signature": "json key notes",
+          "after_start_line": 797,
+          "dependents_count": 3
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "fallback_entry_points",
+          "new_signature": "json key fallback_entry_points",
+          "after_start_line": 800,
+          "dependents_count": 4
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "executed_entry_points",
+          "new_signature": "json key executed_entry_points",
+          "after_start_line": 801,
+          "dependents_count": 2
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "pipeline.transactions",
+          "new_signature": "json key pipeline.transactions",
+          "after_start_line": 802,
+          "dependents_count": 41
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "execution_mode",
+          "new_signature": "json key execution_mode",
+          "after_start_line": 804,
+          "dependents_count": 5
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "execution_errors",
+          "new_signature": "json key execution_errors",
+          "after_start_line": 817,
+          "dependents_count": 6
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "head_tree_note",
+          "new_signature": "json key head_tree_note",
+          "after_start_line": 818,
+          "dependents_count": 3
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "lineage",
+          "new_signature": "json key lineage",
+          "after_start_line": 819,
+          "dependents_count": 10
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "available",
+          "new_signature": "json key available",
+          "after_start_line": 820,
+          "dependents_count": 6
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "tables",
+          "new_signature": "json key tables",
+          "after_start_line": 821,
+          "dependents_count": 7
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "edges",
+          "new_signature": "json key edges",
+          "after_start_line": 826,
+          "dependents_count": 6
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "target",
+          "new_signature": "json key target",
+          "after_start_line": 829,
+          "dependents_count": 4
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "entity_type",
+          "new_signature": "json key entity_type",
+          "after_start_line": 830,
+          "dependents_count": 2
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "entity_id",
+          "new_signature": "json key entity_id",
+          "after_start_line": 831,
+          "dependents_count": 2
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "last_seen",
+          "new_signature": "json key last_seen",
+          "after_start_line": 832,
+          "dependents_count": 3
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "events",
+          "new_signature": "json key events",
+          "after_start_line": 833,
+          "dependents_count": 3
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "upstream_tables",
+          "new_signature": "json key upstream_tables",
+          "after_start_line": 868,
+          "dependents_count": 5
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "downstream_tables",
+          "new_signature": "json key downstream_tables",
+          "after_start_line": 869,
+          "dependents_count": 5
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "readers",
+          "new_signature": "json key readers",
+          "after_start_line": 870,
+          "dependents_count": 5
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "statement_id",
+          "new_signature": "json key statement_id",
+          "after_start_line": 871,
+          "dependents_count": 10
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "days",
+          "new_signature": "json key days",
+          "after_start_line": 873,
+          "dependents_count": 6
+        }
+      ]
+    },
+    {
+      "path": "evidence/review_card_demo_databricks_job.md",
+      "status": "A",
+      "language": "Markdown",
+      "changes": [
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "Ripple-review-card:-268c4ec---demo/abs-normalize",
+          "new_signature": "markdown heading Ripple review card: `268c4ec` -\u003e `demo/abs-normalize`",
+          "after_start_line": 1,
+          "dependents_count": 0
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "1.-Original-requirement-intent",
+          "new_signature": "markdown heading 1. Original requirement (intent)",
+          "after_start_line": 8,
+          "dependents_count": 0
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "2.-Source-locations-Entire-Graph-source-entire-graph",
+          "new_signature": "markdown heading 2. Source locations (Entire Graph, source = entire-graph)",
+          "after_start_line": 15,
+          "dependents_count": 0
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "3.-Affected-data-products-source-configured-ripple.toml",
+          "new_signature": "markdown heading 3. Affected data products (source = configured, ripple.toml)",
+          "after_start_line": 25,
+          "dependents_count": 5
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "4.-Reproducible-comparison-same-input-snapshot",
+          "new_signature": "markdown heading 4. Reproducible comparison (same input snapshot)",
+          "after_start_line": 32,
+          "dependents_count": 0
+        }
+      ]
+    },
+    {
+      "path": "pipeline/transactions.py",
+      "status": "M",
+      "language": "Python",
+      "changes": [
+        {
+          "type": "body_changed",
+          "kind": "function",
+          "name": "normalize_amount",
+          "before_start_line": 19,
+          "after_start_line": 13,
+          "dependents_count": 46
+        },
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "clean_transactions",
+          "new_signature": "def clean_transactions(rows) -\u003e list[dict]",
+          "after_start_line": 26,
+          "dependents_count": 32
+        },
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "daily_revenue",
+          "new_signature": "def daily_revenue(clean_rows) -\u003e list[dict]",
+          "after_start_line": 47,
+          "dependents_count": 23
+        },
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "run",
+          "new_signature": "def run(raw_rows) -\u003e dict",
+          "after_start_line": 60,
+          "dependents_count": 63
+        }
+      ]
+    },
+    {
+      "path": "progress.md",
+      "status": "M",
+      "language": "Markdown",
+      "changes": [
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "14:45-Session-C-remaining-items",
+          "new_signature": "markdown heading 14:45 Session C (remaining items)",
+          "after_start_line": 65,
+          "dependents_count": 0
+        }
+      ]
+    },
+    {
+      "path": "ripple.toml",
+      "status": "M",
+      "language": "TOML",
+      "changes": [
+        {
+          "type": "body_changed",
+          "kind": "setting",
+          "name": "databricks_job",
+          "before_start_line": 9,
+          "after_start_line": 9,
+          "dependents_count": 4
+        },
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "scan",
+          "new_signature": "section scan",
+          "after_start_line": 25,
+          "dependents_count": 13
+        },
+        {
+          "type": "added",
+          "kind": "setting",
+          "name": "config_files",
+          "new_signature": "setting config_files",
+          "after_start_line": 26,
+          "dependents_count": 5
+        },
+        {
+          "type": "added",
+          "kind": "setting",
+          "name": "extra_dirs",
+          "new_signature": "setting extra_dirs",
+          "after_start_line": 27,
+          "dependents_count": 3
+        }
+      ]
+    },
+    {
+      "path": "ripple/card.py",
+      "status": "M",
+      "language": "Python",
+      "changes": [
+        {
+          "type": "body_changed",
+          "kind": "class",
+          "name": "ReviewCard",
+          "before_start_line": 19,
+          "after_start_line": 19,
+          "dependents_count": 7
+        },
+        {
+          "type": "body_changed",
+          "kind": "function",
+          "name": "decide",
+          "before_start_line": 51,
+          "after_start_line": 60,
+          "dependents_count": 15
+        },
+        {
+          "type": "body_changed",
+          "kind": "function",
+          "name": "render_markdown",
+          "before_start_line": 85,
+          "after_start_line": 97,
+          "dependents_count": 12
+        }
+      ]
+    },
+    {
+      "path": "ripple/cli.py",
+      "status": "M",
+      "language": "Python",
+      "changes": [
+        {
+          "type": "signature_changed",
+          "kind": "function",
+          "name": "review",
+          "old_signature": "def review(repo: Path, base: str, head: str, backend: str, out: Path | None, use_entire: bool = True) -\u003e cardmod.ReviewCard",
+          "new_signature": "def review(repo: Path, base: str, head: str, backend: str, out: Path | None, use_entire: bool = True, execute: str = \"local\", use_worktree: bool = True, lineage: bool = True) -\u003e cardmod.ReviewCard",
+          "before_start_line": 37,
+          "after_start_line": 40,
+          "dependents_count": 13
+        },
+        {
+          "type": "body_changed",
+          "kind": "function",
+          "name": "main",
+          "before_start_line": 110,
+          "after_start_line": 148,
+          "dependents_count": 17
+        }
+      ]
+    },
+    {
+      "path": "ripple/config.py",
+      "status": "M",
+      "language": "Python",
+      "changes": [
+        {
+          "type": "added",
+          "kind": "class",
+          "name": "ScanConfig",
+          "new_signature": "class ScanConfig",
+          "after_start_line": 37,
+          "dependents_count": 2
+        },
+        {
+          "type": "body_changed",
+          "kind": "class",
+          "name": "Config",
+          "before_start_line": 37,
+          "after_start_line": 44,
+          "dependents_count": 1
+        },
+        {
+          "type": "body_changed",
+          "kind": "function",
+          "name": "load_config",
+          "before_start_line": 43,
+          "after_start_line": 51,
+          "dependents_count": 3
+        }
+      ]
+    },
+    {
+      "path": "ripple/databricks_backend.py",
+      "status": "M",
+      "language": "Python",
+      "changes": [
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "publish_snapshot",
+          "new_signature": "def publish_snapshot(warehouse_id: str, run_id: str, raw: list[dict]) -\u003e list[str]",
+          "after_start_line": 105,
+          "dependents_count": 2
+        },
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "publish_outputs",
+          "new_signature": "def publish_outputs(warehouse_id: str, run_id: str, base_out: dict, head_out: dict) -\u003e list[str]",
+          "after_start_line": 115,
+          "dependents_count": 2
+        },
+        {
+          "type": "body_changed",
+          "kind": "function",
+          "name": "publish_run",
+          "before_start_line": 98,
+          "after_start_line": 129,
+          "dependents_count": 0
+        },
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "parse_lineage",
+          "new_signature": "def parse_lineage(tables: list[str], columns: list[str], rows: list[list]) -\u003e dict",
+          "after_start_line": 199,
+          "dependents_count": 4
+        },
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "discover_lineage",
+          "new_signature": "def discover_lineage(warehouse_id: str, tables: list[str], days: int = 30) -\u003e dict",
+          "after_start_line": 229,
+          "dependents_count": 1
+        }
+      ]
+    },
+    {
+      "path": "ripple/databricks_job.py",
+      "status": "A",
+      "language": "Python",
+      "changes": [
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "render_job_script",
+          "new_signature": "def render_job_script(run_id: str, entry_file: str, entry_symbol: str, base_src: str, head_src: str, schema: str = SCHEMA) -\u003e str",
+          "after_start_line": 68,
+          "dependents_count": 3
+        },
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "submit_body",
+          "new_signature": "def submit_body(run_name: str, python_file: str, environment_key: str = \"ripple_env\", timeout_seconds: int = 900) -\u003e dict",
+          "after_start_line": 74,
+          "dependents_count": 3
+        },
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "_cli",
+          "new_signature": "def _cli(*args: str, timeout: int = 120) -\u003e str",
+          "after_start_line": 89,
+          "dependents_count": 2
+        },
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "current_user",
+          "new_signature": "def current_user() -\u003e str",
+          "after_start_line": 101,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "upload_script",
+          "new_signature": "def upload_script(script: str, run_id: str, workdir: Path, user: str | None = None) -\u003e str",
+          "after_start_line": 105,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "run_job",
+          "new_signature": "def run_job(python_file: str, run_name: str, poll_seconds: float = 5.0, max_wait: int = 900) -\u003e dict",
+          "after_start_line": 119,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "execute_on_databricks",
+          "new_signature": "def execute_on_databricks(run_id: str, entry_file: str, entry_symbol: str, base_src: str, head_src: str, run_name: str, evidence_dir: Path) -\u003e dict",
+          "after_start_line": 153,
+          "dependents_count": 1
+        }
+      ]
+    },
+    {
+      "path": "ripple/graph.py",
+      "status": "M",
+      "language": "Python",
+      "changes": [
+        {
+          "type": "body_changed",
+          "kind": "function",
+          "name": "parse_impact",
+          "before_start_line": 187,
+          "after_start_line": 189,
+          "dependents_count": 9
+        },
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "_string_constants",
+          "new_signature": "def _string_constants(source: str, symbols: set[str]) -\u003e tuple[dict[str, list[int]], list[tuple[int, str]], bool]",
+          "after_start_line": 232,
+          "dependents_count": 2
+        },
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "_string_constants_regex",
+          "new_signature": "def _string_constants_regex(lines: list[str], symbols: set[str]) -\u003e tuple[dict[str, list[int]], list[tuple[int, str]]]",
+          "after_start_line": 258,
+          "dependents_count": 2
+        },
+        {
+          "type": "body_changed",
+          "kind": "function",
+          "name": "scan_dynamic_references",
+          "before_start_line": 230,
+          "after_start_line": 274,
+          "dependents_count": 10
+        },
+        {
+          "type": "body_changed",
+          "kind": "function",
+          "name": "_scan_dynamic_references_regex",
+          "before_start_line": 273,
+          "after_start_line": 300,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "_config_name_hits",
+          "new_signature": "def _config_name_hits(lines: list[str], symbols: set[str], suffix: str) -\u003e dict[str, list[int]]",
+          "after_start_line": 311,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "scan_cross_file_references",
+          "new_signature": "def scan_cross_file_references(files: dict[str, str], symbols: set[str]) -\u003e dict[str, list[DynamicReference]]",
+          "after_start_line": 324,
+          "dependents_count": 9
+        },
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "configures_references",
+          "new_signature": "def configures_references(data: dict) -\u003e list[DynamicReference]",
+          "after_start_line": 366,
+          "dependents_count": 3
+        },
+        {
+          "type": "signature_changed",
+          "kind": "function",
+          "name": "graph_impact",
+          "old_signature": "def graph_impact(repo: Path, symbol: str, file_path: str | None = None, depth: int = 2, scan_files: list[str] | None = None) -\u003e ImpactResult",
+          "new_signature": "def graph_impact(repo: Path, symbol: str, file_path: str | None = None, depth: int = 2, scan_files: list[str] | None = None, extra_references: list[DynamicReference] | None = None) -\u003e ImpactResult",
+          "before_start_line": 295,
+          "after_start_line": 389,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "scan_set",
+          "new_signature": "def scan_set(root: Path, changed_files: list[str], entry_files: list[str], config_files: list[str] | None = None, extra_dirs: list[str] | None = None) -\u003e dict[str, str]",
+          "after_start_line": 425,
+          "dependents_count": 4
+        }
+      ]
+    },
+    {
+      "path": "ripple/worktree.py",
+      "status": "A",
+      "language": "Python",
+      "changes": [
+        {
+          "type": "added",
+          "kind": "class",
+          "name": "HeadTree",
+          "new_signature": "class HeadTree",
+          "after_start_line": 20,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "_git",
+          "new_signature": "def _git(repo: Path, *args: str) -\u003e str",
+          "after_start_line": 27,
+          "dependents_count": 3
+        },
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "resolve",
+          "new_signature": "def resolve(repo: Path, rev: str) -\u003e str",
+          "after_start_line": 34,
+          "dependents_count": 7
+        },
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "_tree_matches_checkout",
+          "new_signature": "def _tree_matches_checkout(repo: Path, sha: str) -\u003e bool",
+          "after_start_line": 38,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "head_tree",
+          "new_signature": "def head_tree(repo: Path, head: str, enabled: bool = True)",
+          "after_start_line": 46,
+          "dependents_count": 5
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/cross_file/runner.py",
+      "status": "A",
+      "language": "Python",
+      "changes": [
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "run_steps",
+          "new_signature": "def run_steps(step_names, module_name=\"pipeline.transactions\")",
+          "after_start_line": 6,
+          "dependents_count": 2
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/cross_file/steps.yaml",
+      "status": "A",
+      "language": "YAML",
+      "changes": [
+        {
+          "type": "added",
+          "kind": "section",
+          "name": "steps",
+          "new_signature": "section steps",
+          "after_start_line": 2,
+          "dependents_count": 8
+        }
+      ]
+    },
+    {
+      "path": "tests/test_next.py",
+      "status": "A",
+      "language": "Python",
+      "changes": [
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "_files",
+          "new_signature": "def _files(*names)",
+          "after_start_line": 26,
+          "dependents_count": 4
+        },
+        {
+          "type": "added",
+          "kind": "function",
+          "name": "_card",
+          "new_signature": "def _card(**kw)",
+          "after_start_line": 30,
+          "dependents_count": 16
+        },
+        {
+          "type": "added",
+          "kind": "class",
+          "name": "CrossFileScanTests",
+          "new_signature": "class CrossFileScanTests(unittest.TestCase)",
+          "after_start_line": 37,
+          "dependents_count": 0
+        },
+        {
+          "type": "added",
+          "kind": "method",
+          "name": "CrossFileScanTests.test_registry_in_yaml_plus_getattr_in_other_module_is_flagged",
+          "new_signature": "def test_registry_in_yaml_plus_getattr_in_other_module_is_flagged(self)",
+          "after_start_line": 38,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "method",
+          "name": "CrossFileScanTests.test_yaml_comment_and_dotted_paths_do_not_count",
+          "new_signature": "def test_yaml_comment_and_dotted_paths_do_not_count(self)",
+          "after_start_line": 46,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "method",
+          "name": "CrossFileScanTests.test_name_without_any_reflection_is_not_flagged",
+          "new_signature": "def test_name_without_any_reflection_is_not_flagged(self)",
+          "after_start_line": 51,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "method",
+          "name": "CrossFileScanTests.test_same_file_pairs_are_left_to_the_single_file_scan",
+          "new_signature": "def test_same_file_pairs_are_left_to_the_single_file_scan(self)",
+          "after_start_line": 56,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "method",
+          "name": "CrossFileScanTests.test_cross_file_reference_makes_impact_partial",
+          "new_signature": "def test_cross_file_reference_makes_impact_partial(self)",
+          "after_start_line": 60,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "method",
+          "name": "CrossFileScanTests.test_scan_set_covers_siblings_and_package_config",
+          "new_signature": "def test_scan_set_covers_siblings_and_package_config(self)",
+          "after_start_line": 67,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "method",
+          "name": "CrossFileScanTests.test_static_repo_has_no_cross_file_reference",
+          "new_signature": "def test_static_repo_has_no_cross_file_reference(self)",
+          "after_start_line": 73,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "class",
+          "name": "ConfiguresEdgeTests",
+          "new_signature": "class ConfiguresEdgeTests(unittest.TestCase)",
+          "after_start_line": 78,
+          "dependents_count": 0
+        },
+        {
+          "type": "added",
+          "kind": "method",
+          "name": "ConfiguresEdgeTests.test_configures_edge_is_reported_and_partial",
+          "new_signature": "def test_configures_edge_is_reported_and_partial(self)",
+          "after_start_line": 79,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "class",
+          "name": "HeadWorktreeTests",
+          "new_signature": "class HeadWorktreeTests(unittest.TestCase)",
+          "after_start_line": 91,
+          "dependents_count": 0
+        },
+        {
+          "type": "added",
+          "kind": "method",
+          "name": "HeadWorktreeTests._repo",
+          "new_signature": "def _repo(self)",
+          "after_start_line": 92,
+          "dependents_count": 4
+        },
+        {
+          "type": "added",
+          "kind": "method",
+          "name": "HeadWorktreeTests.git",
+          "new_signature": "def git(*a)",
+          "after_start_line": 94,
+          "dependents_count": 10
+        },
+        {
+          "type": "added",
+          "kind": "method",
+          "name": "HeadWorktreeTests.test_worktree_materialises_head_and_cleans_up",
+          "new_signature": "def test_worktree_materialises_head_and_cleans_up(self)",
+          "after_start_line": 107,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "method",
+          "name": "HeadWorktreeTests.test_checked_out_head_needs_no_worktree",
+          "new_signature": "def test_checked_out_head_needs_no_worktree(self)",
+          "after_start_line": 119,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "method",
+          "name": "HeadWorktreeTests.test_disabled_uses_checkout_and_says_so",
+          "new_signature": "def test_disabled_uses_checkout_and_says_so(self)",
+          "after_start_line": 125,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "class",
+          "name": "DatabricksJobTests",
+          "new_signature": "class DatabricksJobTests(unittest.TestCase)",
+          "after_start_line": 132,
+          "dependents_count": 0
+        },
+        {
+          "type": "added",
+          "kind": "method",
+          "name": "DatabricksJobTests.test_script_embeds_both_sources_and_parses",
+          "new_signature": "def test_script_embeds_both_sources_and_parses(self)",
+          "after_start_line": 133,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "method",
+          "name": "DatabricksJobTests.test_submit_body_is_serverless_single_task",
+          "new_signature": "def test_submit_body_is_serverless_single_task(self)",
+          "after_start_line": 142,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "class",
+          "name": "LineageTests",
+          "new_signature": "class LineageTests(unittest.TestCase)",
+          "after_start_line": 150,
+          "dependents_count": 0
+        },
+        {
+          "type": "added",
+          "kind": "method",
+          "name": "LineageTests.test_parse_upstream_downstream_and_readers",
+          "new_signature": "def test_parse_upstream_downstream_and_readers(self)",
+          "after_start_line": 153,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "method",
+          "name": "LineageTests.test_sql_filters_by_table_and_window",
+          "new_signature": "def test_sql_filters_by_table_and_window(self)",
+          "after_start_line": 169,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "method",
+          "name": "LineageTests.test_card_renders_lineage_and_unavailable",
+          "new_signature": "def test_card_renders_lineage_and_unavailable(self)",
+          "after_start_line": 175,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "class",
+          "name": "ExecutionTests",
+          "new_signature": "class ExecutionTests(unittest.TestCase)",
+          "after_start_line": 185,
+          "dependents_count": 0
+        },
+        {
+          "type": "added",
+          "kind": "method",
+          "name": "ExecutionTests.test_execution_failure_without_comparison_needs_verification",
+          "new_signature": "def test_execution_failure_without_comparison_needs_verification(self)",
+          "after_start_line": 186,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "method",
+          "name": "ExecutionTests.test_job_run_shown_on_card",
+          "new_signature": "def test_job_run_shown_on_card(self)",
+          "after_start_line": 191,
+          "dependents_count": 1
+        },
+        {
+          "type": "added",
+          "kind": "method",
+          "name": "ExecutionTests.test_config_scan_section_is_optional",
+          "new_signature": "def test_config_scan_section_is_optional(self)",
+          "after_start_line": 202,
+          "dependents_count": 1
+        }
+      ]
+    }
+  ],
+  "warnings": [
+    {
+      "code": "E_PARSE_ERROR",
+      "severity": "warning",
+      "file_path": "pipeline/transactions.py",
+      "effect_on_semantic_completeness": "file parsed with syntax errors on one side; diff kept but may be incomplete or contain phantom changes",
+      "detail": "tree-sitter syntax error nodes present: error ERROR at line 26 column 15 near \"are positive\"; error ERROR at line 26 column 29 near \"refunds are negative. The raw feed stores\"; error ERROR at line 27 column 5 near \"magnitude only, so the sign is derived from ``kind``.\\n    Documented intent: ref...\"; error ERROR at line 27 column 15 near \"only\"; error ERROR at line 27 column 21 near \"so the\""
+    }
+  ]
+}

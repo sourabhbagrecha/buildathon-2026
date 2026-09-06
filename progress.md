@@ -69,3 +69,8 @@ Timestamps are IST, 6 September 2026.
 - Lineage on the first card showed only ad-hoc reads/writes: Unity Catalog writes lineage asynchronously (the job run's events were still absent 40 minutes later), and the job collects rows to the driver, so reads and writes are separate events rather than one flow. Stated on the card.
 - Docs: `ripple.yaml` in BUILDATHON.md corrected to `ripple.toml`; new "After the Curveball" section; limitations rewritten. Tests: 56 pass (`tests/test_next.py` adds 19).
 - Push plan: `ripple-next` to the mirror (PR to `main`); `demo/abs-normalize` force-pushed with lease (remote copy was still based on the pre-Curveball commit).
+
+## 15:03 Checkpoint 5 (remaining items)
+- Commit b8fcc03 on `ripple-next` (pushed), Entire checkpoint `01M1V124D75T56BXPP096FYZF6`. Semantic diff vs checkpoint 4's merged `main` (281ad72) saved as `evidence/graph/diff_checkpoint4_vs_next.json`.
+- Verified after commit: 56 tests pass; `main..demo/abs-normalize` against the still-broken `main` exits 3 with the SyntaxError on the card (graph also reports `E_PARSE_ERROR` for the base side); `268c4ec..demo/abs-normalize` BLOCK with 4 confirmed edges; dynamic-dispatch abs BLOCK / safe PASS from the main checkout; no worktrees left behind.
+- Not done by this session (needs the owner): merge `ripple-next` into `main` on GitHub (mirror protects `main`), and `git push --force-with-lease origin demo/abs-normalize` (blocked for the agent; the local branch is rebased on 268c4ec, the remote copy is still based on 3ecff2d).
