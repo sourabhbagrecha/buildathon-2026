@@ -9,11 +9,29 @@ from pathlib import Path
 
 from ripple import card as cardmod
 from ripple.compare import compare_outputs
-from ripple.config import load_config
+from ripple.config import Mapping, load_config
 from ripple.databricks_backend import DatabricksError, compare_run, ensure_tables, publish_run, save_evidence
 from ripple.execute import load_snapshot, run_entry_point
-from ripple.graph import GraphError, graph_diff, graph_impact, reachable_entry_points
+from ripple.graph import ANALYSIS_PARTIAL, GraphError, analysis_state, graph_diff, graph_impact, reachable_entry_points
 from ripple.intent import lookup_intent
+
+
+def select_mappings(mappings: list[Mapping], reached_names: set[str], analysis: str,
+                    has_code_changes: bool) -> tuple[list[Mapping], list[str]]:
+    """Which configured entry points to execute.
+
+    Reached ones always. When analysis is partial and code changed, every other configured
+    entry point too (safe fallback): a caller edge the graph cannot see must not read as safe,
+    and execute-and-compare is the verification path. Returns (mappings, fallback entry points).
+    """
+    chosen = [m for m in mappings if m.entry_symbol in reached_names]
+    fallback: list[str] = []
+    if analysis == ANALYSIS_PARTIAL and has_code_changes:
+        for m in mappings:
+            if m.entry_symbol not in reached_names:
+                chosen.append(m)
+                fallback.append(m.entry_point)
+    return chosen, fallback
 
 
 def review(repo: Path, base: str, head: str, backend: str, out: Path | None, use_entire: bool = True) -> cardmod.ReviewCard:
@@ -22,17 +40,27 @@ def review(repo: Path, base: str, head: str, backend: str, out: Path | None, use
 
     # [1] semantic diff
     diff = graph_diff(repo, base, head)
-    # [2] impact per changed symbol
+    # [2] impact per changed symbol; Ripple also scans the changed file and the configured
+    #     entry files for dynamic references the graph cannot resolve.
     impacts = []
-    for ch in diff.changed:
+    failed = 0
+    scan_files = [m.entry_file for m in cfg.mappings]
+    code_changes = [ch for ch in diff.changed if ch.is_code]
+    skipped = len(diff.changed) - len(code_changes)
+    if skipped:
+        notes.append(f"{skipped} non-code entity change(s) (docs, JSON, TOML) listed but not impact-analysed")
+    for ch in code_changes:
         try:
-            impacts.append(graph_impact(repo, ch.name, file_path=ch.file_path))
+            impacts.append(graph_impact(repo, ch.name, file_path=ch.file_path, scan_files=scan_files))
         except GraphError as exc:
+            failed += 1
             notes.append(f"impact analysis failed for {ch.name}: {exc}")
+    analysis, partial_reasons = analysis_state(impacts, failed)
     entry_symbols = {m.entry_symbol for m in cfg.mappings}
     reached = [c for imp in impacts for c in reachable_entry_points(imp, entry_symbols)]
     reached_names = {c.name for c in reached}
-    mappings = [m for m in cfg.mappings if m.entry_symbol in reached_names]
+    # [3] safe fallback: when analysis is partial, a missing edge must not read as "safe".
+    mappings, fallback = select_mappings(cfg.mappings, reached_names, analysis, bool(code_changes))
 
     # [4] intent
     intent = None
@@ -67,7 +95,10 @@ def review(repo: Path, base: str, head: str, backend: str, out: Path | None, use
     warnings = list(diff.warnings) + [w for imp in impacts for w in imp.warnings]
     rc = cardmod.ReviewCard(base=base, head=head, intent=intent, changed=diff.changed, impacts=impacts,
                             reached_entry_points=reached, mappings=mappings, local_diffs=local_diffs,
-                            databricks=databricks, graph_warnings=warnings, notes=notes)
+                            databricks=databricks, graph_warnings=warnings, notes=notes,
+                            analysis=analysis, partial_reasons=partial_reasons,
+                            fallback_entry_points=fallback,
+                            executed_entry_points=[m.entry_point for m in mappings])
     rc.verdict = cardmod.decide(rc)
     if out:
         out.parent.mkdir(parents=True, exist_ok=True)
@@ -94,4 +125,8 @@ def main(argv: list[str] | None = None) -> int:
         print(f"ripple: graph error: {exc}", file=sys.stderr)
         return 2
     print(cardmod.render_markdown(rc))
-    return 1 if rc.verdict.startswith("BLOCK") else 0
+    if rc.verdict.startswith(cardmod.BLOCK):
+        return 1
+    if rc.verdict.startswith(cardmod.NEEDS_VERIFICATION):
+        return 3
+    return 0
