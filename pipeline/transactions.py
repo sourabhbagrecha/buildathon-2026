@@ -1,33 +1,35 @@
-"""Transaction transformation pipeline (pure Python, stdlib only).
+"""Transaction pipeline with DYNAMIC DISPATCH (Curveball fixture).
 
-INTENT (see pipeline/INTENT.md, Entire checkpoint 01M1TVFK5MAS7B1JFN41QA2JQ8):
-purchases are stored as positive amounts and refunds MUST remain negative so that
-daily net revenue = sum(amount) is correct.
+Same behaviour as pipeline/transactions.py, but the steps are looked up
+through a string registry with ``globals()`` / ``getattr``. A static call
+graph cannot see that ``run`` reaches ``normalize_amount``.
 """
 
 from __future__ import annotations
 
 from collections import defaultdict
 
+STEP_REGISTRY = {
+    "normalize": "normalize_amount",
+    "clean": "clean_transactions",
+    "aggregate": "daily_revenue",
+}
+
 
 def normalize_amount(amount: float, kind: str) -> float:
-    """Return the signed amount for a transaction.
-
-    Purchases are positive, refunds are negative. The raw feed stores the
-    magnitude only, so the sign is derived from ``kind``.
-    Documented intent: refunds must remain negative.
-    """
     magnitude = round(float(amount), 2)
     if kind == "refund":
         return -magnitude
     return magnitude
 
 
-def clean_transactions(rows) -> list[dict]:
-    """Produce clean_transactions rows from raw rows.
+def apply_step(step: str, *args):
+    """Resolve a step by name at runtime (reflection: invisible to the static graph)."""
+    fn = globals()[STEP_REGISTRY[step]]
+    return fn(*args)
 
-    Each raw row has: txn_id, txn_date, customer_id, kind, amount (magnitude).
-    """
+
+def clean_transactions(rows) -> list[dict]:
     out = []
     for row in rows:
         kind = str(row["kind"]).strip().lower()
@@ -37,7 +39,7 @@ def clean_transactions(rows) -> list[dict]:
                 "txn_date": str(row["txn_date"]),
                 "customer_id": str(row["customer_id"]),
                 "kind": kind,
-                "amount": normalize_amount(row["amount"], kind),
+                "amount": apply_step("normalize", row["amount"], kind),
             }
         )
     out.sort(key=lambda r: r["txn_id"])
@@ -45,7 +47,6 @@ def clean_transactions(rows) -> list[dict]:
 
 
 def daily_revenue(clean_rows) -> list[dict]:
-    """Aggregate net revenue (sum of signed amounts) and row count per day."""
     totals: dict[str, float] = defaultdict(float)
     counts: dict[str, int] = defaultdict(int)
     for row in clean_rows:
@@ -58,6 +59,6 @@ def daily_revenue(clean_rows) -> list[dict]:
 
 
 def run(raw_rows) -> dict:
-    """Pipeline entry point. Mapped to Databricks job in ripple.toml."""
-    clean = clean_transactions(raw_rows)
-    return {"clean_transactions": clean, "daily_revenue": daily_revenue(clean)}
+    """Pipeline entry point: every step goes through the registry."""
+    clean = apply_step("clean", raw_rows)
+    return {"clean_transactions": clean, "daily_revenue": apply_step("aggregate", clean)}
