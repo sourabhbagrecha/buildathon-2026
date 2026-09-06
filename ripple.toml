@@ -1,0 +1,21 @@
+# Ripple configuration. Mappings here are CONFIGURED (explicit, inspectable) and are
+# labelled `source = "configured"` on the review card, separately from relationships
+# discovered by Entire Graph (`source = "entire-graph"`).
+
+[[mapping]]
+source = "configured"
+entry_point = "pipeline.transactions:run"
+entry_file = "pipeline/transactions.py"
+databricks_job = "ripple_transactions_job"        # placeholder job / notebook name
+databricks_warehouse_id = "c9a0bd38022ced72"
+input_table = "workspace.ripple.raw_transactions"
+output_tables = ["workspace.ripple.clean_transactions", "workspace.ripple.daily_revenue"]
+data_products = ["Daily Revenue dashboard", "Finance month-end close extract"]
+intent_file = "pipeline/INTENT.md"
+intent_checkpoint = "01M1TVFK5MAS7B1JFN41QA2JQ8"
+intent_query = "refunds negative"
+
+[snapshot]
+csv = "data/raw_transactions.csv"
+key_clean = "txn_id"
+key_daily = "txn_date"
