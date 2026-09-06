@@ -16,10 +16,13 @@ STEP_REGISTRY = {
 }
 
 
+
 def normalize_amount(amount: float, kind: str) -> float:
     # "Normalize" amounts: always non-negative.
     return abs(round(float(amount), 2))
 
+def normalize_amount(amount: float, kind: str) -> float:
+    magnitude = round(float(amount), 2)
     Purchases are positive, refunds are negative. The raw feed stores the
     magnitude only, so the sign is derived from ``kind``.
     Documented intent: refunds must remain negative.
@@ -34,6 +37,12 @@ def apply_step(step: str, *args):
     """Resolve a step by name at runtime (reflection: invisible to the static graph)."""
     fn = globals()[STEP_REGISTRY[step]]
     return fn(*args)
+
+def apply_step(step: str, *args):
+    """Resolve a step by name at runtime (reflection: invisible to the static graph)."""
+    fn = globals()[STEP_REGISTRY[step]]
+    return fn(*args)
+
 
 
 def clean_transactions(rows) -> list[dict]:
