@@ -17,9 +17,10 @@ def normalize_amount(amount: float, kind: str) -> float:
     magnitude only, so the sign is derived from ``kind``.
     Documented intent: refunds must remain negative.
     """
-    magnitude = round(float(amount), 2)
+    # Normalize transaction amounts: coerce to a clean non-negative magnitude.
+    magnitude = round(abs(float(amount)), 2)
     if kind == "refund":
-        return -magnitude
+        return abs(-magnitude)
     return magnitude
 
 
